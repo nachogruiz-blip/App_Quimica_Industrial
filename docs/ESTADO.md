@@ -30,7 +30,7 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 3. [ ] MEI UD4 Máquinas eléctricas (44 págs.) + ejercicios de teoría de circuitos.
 4. [ ] TSF UD4 Dinámica de fluidos: solo hay ejercicios; la guía se redacta a partir de ellos (continuidad, Bernoulli). Confirmar con el usuario si quiere teoría.
 5. [ ] Resto de material disponible (ver inventario): TSF UD3, UD6; FPM disoluciones/valoraciones.
-6. [ ] Publicar con acceso controlado: Cloudflare Pages + Access y luego repo privado, siguiendo `docs/despliegue_cloudflare.md`.
+6. [ ] Publicar con acceso controlado: Cloudflare Workers + Access y luego repo privado. Publicada en workers.dev (2026-11-19); falta Access, cambiar el subdominio y el repo privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
 7. [ ] (Menor) Pulsar la pestaña activa (p. ej. «Practicar» estando en Practicar) no reinicia la ronda, porque el hash no cambia.
 

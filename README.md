@@ -26,7 +26,9 @@ Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [
 ## Estructura
 ```
 index.html          carga los datos y la app
-_headers            cabeceras de seguridad para Cloudflare Pages
+_headers            cabeceras de seguridad para Cloudflare
+wrangler.jsonc      configuración de Cloudflare (Workers con archivos estáticos)
+.assetsignore       lo que NO se publica (docs, tests, .md, .git)
 css/estilos.css     estilos (claro/oscuro)
 js/app.js           motor: guía, práctica, examen, fallos, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)

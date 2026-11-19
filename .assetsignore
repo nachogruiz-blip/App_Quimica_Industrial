@@ -1,0 +1,13 @@
+# Archivos que NO se publican en Cloudflare (solo se sirve la app: index.html, css/, js/, datos/)
+.git
+.github
+.wrangler
+node_modules
+materiales
+docs
+tests
+*.md
+*.pdf
+.gitignore
+.assetsignore
+wrangler.jsonc

@@ -1,10 +1,10 @@
-# Publicar la app con acceso controlado (Cloudflare Pages + Cloudflare Access)
+# Publicar la app con acceso controlado (Cloudflare Workers + Cloudflare Access)
 
 Objetivo: que **solo las personas que tú autorices** (por correo) puedan abrir la app, y que el repo de GitHub pueda ser
 **privado**. Sustituye a GitHub Pages, que siempre publica en abierto.
 
 **Coste: 0 €** (comprobado en noviembre de 2026):
-- Cloudflare Pages, plan gratuito: 500 publicaciones al mes y hasta 20 000 archivos. La app usa una fracción mínima de eso.
+- Cloudflare Workers / Pages, plan gratuito: más que suficiente para una web estática pequeña como esta.
 - Cloudflare Zero Trust (Access), plan gratuito: hasta **50 usuarios**. A partir de ahí es de pago (unos 7 $ por usuario y mes).
 - Al activar Zero Trust, Cloudflare puede pedir una tarjeta aunque elijas el plan gratuito; no cobra nada mientras sigas en él.
 
@@ -15,22 +15,25 @@ Objetivo: que **solo las personas que tú autorices** (por correo) puedan abrir 
 ## 1. Crear la cuenta
 1. Entra en `dash.cloudflare.com` y crea una cuenta gratuita (correo y contraseña). Activa la verificación en dos pasos.
 
-## 2. Publicar la app (Cloudflare Pages)
-1. *Workers & Pages → Create → Pages → Connect to Git*.
-2. Autoriza a Cloudflare en GitHub y dale acceso **solo** al repo `App_Quimica_Industrial`.
-3. Elige el repo y configura:
-   - Rama de producción: `main`
-   - Framework preset: `None`
-   - Build command: *(vacío)*
-   - Build output directory: `/` *(o vacío)*
-4. *Save and Deploy*. En menos de un minuto tendrás `https://<proyecto>.pages.dev`.
-   Cada push a `main` se publica solo. El archivo `_headers` del repo añade las cabeceras de seguridad.
+## 2. Publicar la app (Cloudflare Workers con archivos estáticos)
+Está hecho así (noviembre de 2026): *Workers & Pages → Create → Import a repository* con el repo `App_Quimica_Industrial`.
+Cloudflare ejecuta `npx wrangler deploy` en cada push a `main`. La configuración está en el repo:
+- `wrangler.jsonc`: nombre `app-quimica-industrial`, sirve la carpeta raíz y **sin URLs de vista previa**
+  (`preview_urls: false`), para que solo haya una dirección que proteger.
+- `.assetsignore`: solo se publican `index.html`, `css/`, `js/` y `datos/`. Ni `docs/`, ni `tests/`, ni `*.md`, ni `.git`.
+- `_headers`: cabeceras de seguridad (CSP, etc.).
+
+Dirección: `https://app-quimica-industrial.<subdominio>.workers.dev`.
+**Privacidad:** el `<subdominio>` es el de la cuenta y por defecto lleva el nombre de usuario. Cámbialo por uno neutro en
+*Workers & Pages → (panel derecho) Subdomain → Change*. La dirección de la app cambia en consecuencia.
 
 ## 3. Cerrar el acceso (Cloudflare Access)
 1. En el panel: *Zero Trust*. Elige un nombre de equipo neutro y el plan **Free**.
-2. *Access → Applications → Add an application → Self-hosted*.
+2. *Zero Trust → Access controls → Applications → Add an application → Self-hosted*.
    - Nombre: `Química Industrial`.
-   - Dominios: `<proyecto>.pages.dev` y `*.<proyecto>.pages.dev` (este último cubre las versiones de prueba).
+   - Dominio: `app-quimica-industrial.<subdominio>.workers.dev`.
+   - Atajo: en el Worker, *Settings → Domains & Routes → workers.dev* puede haber un interruptor «Cloudflare Access» que crea
+     la aplicación; después añade los correos en su política.
    - Duración de la sesión: p. ej. `1 month`, para no pedir el código cada día.
 3. Añade una política:
    - Nombre: `Personas autorizadas`

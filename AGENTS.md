@@ -22,7 +22,7 @@ App web estática de estudio para Química Industrial (FP Grado Superior). Docum
 
 ## Revisiones obligatorias antes de cada commit
 Trata este repo como **público**: aunque pase a privado y la app se sirva tras Cloudflare Access
-(`docs/despliegue_cloudflare.md`), puede volver a abrirse. No actives GitHub Pages; no toques `_headers` sin motivo.
+(`docs/despliegue_cloudflare.md`), puede volver a abrirse. No actives GitHub Pages; no toques `_headers`, `.assetsignore` ni `wrangler.jsonc` sin motivo (deciden qué se publica).
 
 **Errores**
 - `node tests/comprobar.js` → «✅ Todo correcto» (formato, numéricas, respuestas en Chromium, lector de números, seguridad).

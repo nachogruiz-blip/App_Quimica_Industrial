@@ -1,0 +1,9 @@
+// Configuración de Cloudflare (Workers con archivos estáticos). Ver docs/despliegue_cloudflare.md.
+{
+  "name": "app-quimica-industrial",
+  "compatibility_date": "2026-11-18",
+  "assets": { "directory": "." },
+  "workers_dev": true,
+  // Sin URLs de vista previa: así solo hay una dirección que proteger con Cloudflare Access.
+  "preview_urls": false
+}
