@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-19-5",
+    titulo: "Nuevo aspecto en tonos lila",
+    puntos: [
+      "La app pasa a colores lila suaves, en modo día y en modo noche.",
+      "Iconos de química en el menú (🔬 Estudio, 🧪 Test) y en cada asignatura (💧, ⚡, ⚗️).",
+      "El icono de la app instalada también es lila: si ya la tenías instalada, puede tardar en actualizarse."
+    ]
+  },
+  {
     id: "2026-11-19-4",
     titulo: "Instala la app en tu móvil",
     puntos: [

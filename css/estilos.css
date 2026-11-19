@@ -1,6 +1,6 @@
-:root{--bg:#f7f8fa;--card:#fff;--txt:#1d2433;--sub:#5b6478;--borde:#dde1e8;--acento:#0f766e;--sobre-acento:#fff;--acento-suave:#e6f4f2;--ok:#15803d;--ko:#b91c1c;--okbg:#e8f6ec;--kobg:#fbeaea;color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b1f29;--txt:#e6e9ef;--sub:#9aa3b5;--borde:#2c3242;--acento:#2dd4bf;--sobre-acento:#062a26;--acento-suave:#123631;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#12151c;--card:#1b1f29;--txt:#e6e9ef;--sub:#9aa3b5;--borde:#2c3242;--acento:#2dd4bf;--sobre-acento:#062a26;--acento-suave:#123631;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717;color-scheme:dark}
+:root{--bg:#f8f6fd;--card:#fff;--txt:#221c33;--sub:#6a6282;--borde:#e6e0f3;--acento:#6d4fc2;--sobre-acento:#fff;--acento-suave:#f0eafc;--lila-2:#ddd0f7;--lila-3:#b7a1ec;--ok:#15803d;--ko:#b91c1c;--okbg:#e8f6ec;--kobg:#fbeaea;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15121e;--card:#1f1a2c;--txt:#ebe7f5;--sub:#a59cbd;--borde:#342c48;--acento:#b9a4f5;--sobre-acento:#1c1430;--acento-suave:#2c2442;--lila-2:#3b3058;--lila-3:#7d68c4;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15121e;--card:#1f1a2c;--txt:#ebe7f5;--sub:#a59cbd;--borde:#342c48;--acento:#b9a4f5;--sobre-acento:#1c1430;--acento-suave:#2c2442;--lila-2:#3b3058;--lila-3:#7d68c4;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717;color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-tap-highlight-color:transparent}
 a{color:var(--acento)}
@@ -94,3 +94,11 @@ h4{margin:16px 0 4px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
 .modal>.card{max-width:520px;width:100%;max-height:85vh;overflow:auto;margin:0;padding-bottom:0}
 .pie-modal{position:sticky;bottom:0;background:var(--card);margin:0 -16px;padding:12px 16px 16px;border-top:1px solid var(--borde);align-items:center}
+
+/* Tonos lila: cabecera, barras de progreso y tarjetas */
+.barra{background:linear-gradient(90deg,var(--card),var(--acento-suave))}
+.barra-prog,.avance{background:var(--lila-2)}
+.barra-prog>div,.avance>div{background:linear-gradient(90deg,var(--lila-3),var(--acento))}
+a.card:hover{box-shadow:0 2px 12px color-mix(in srgb,var(--acento) 18%,transparent)}
+.card{box-shadow:0 1px 3px color-mix(in srgb,var(--acento) 8%,transparent)}
+.clave{background:var(--acento-suave);border-radius:0 8px 8px 0;padding:8px 10px}

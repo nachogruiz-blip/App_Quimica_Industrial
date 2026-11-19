@@ -74,6 +74,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | Nada del centro ni de personas en el repo público | Decidido por el usuario; contexto privado en el repo de materiales |
 | Tres módulos: TSF (0190), MEI (0191), FPM | Decidido por el usuario; ids en `datos/registro.js` |
 | Prioridad inicial: UD4, UD5, UD7; se empezó por TSF UD5 | Decidido por el usuario |
+| Estilo: paleta lila (acento #6d4fc2 día / #b9a4f5 noche, tonos `--lila-2`, `--lila-3`); verde/rojo solo para acierto/fallo | Decidido por el usuario (2026-11-19) |
+| Emoticonos: menú 🔬 ⏱️ 🧪 ⚙️; asignaturas con `icono` en `datos/registro.js` (💧 TSF, ⚡ MEI, ⚗️ FPM) | Decidido por el usuario |
 | Notación de los apuntes: g = 9,8; Re 2000/4000; «4f» = factor de Darcy; h_f = 4f(L/D)v²/2g | Coherencia con clase |
 | Turbulento: 4f por Colebrook y tolerancia 10 % | En clase se lee el diagrama de Moody; las soluciones de los ejercicios difieren hasta ~12 % de Colebrook |
 | Longitudes equivalentes: se dan en el enunciado | La tabla de L_eq no está en los apuntes |

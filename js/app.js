@@ -24,15 +24,16 @@ function barraProgreso(preguntas) {
   return `<div class="barra-prog" role="progressbar" aria-label="Preguntas dominadas" aria-valuemin="0" aria-valuemax="100"
     aria-valuenow="${pct}"><div style="width:${pct}%"></div></div><div class="sub">Dominas ${d} de ${n} preguntas (${pct} %)</div>`;
 }
+const nombreModulo = m => (m.icono ? m.icono + " " : "") + m.nombre;
 const migas = enlaces => `<p class="sub migas">${enlaces.map(([h, t]) => `<a href="${h}">${t}</a>`).join(" › ")}</p>`;
 const NOMBRES = { estudio: "Estudio", examen: "Examen", test: "Test" };
-const TITULOS = { estudio: "📖 Estudio", examen: "⏱️ Examen", test: "✍️ Test" };
+const TITULOS = { estudio: "🔬 Estudio", examen: "⏱️ Examen", test: "🧪 Test" };
 
 // ---------- Elegir asignatura (común a Estudio, Examen y Test) ----------
 function tarjetaModulo(m, destino) {
   const uds = udsDeModulo(m.id), cod = m.codigo ? ` <span class="sub">(${m.codigo})</span>` : "";
-  if (!uds.length) return `<div class="card apagada"><b>${m.nombre}</b>${cod}<div class="sub">Próximamente</div></div>`;
-  return `<a class="card" href="#/${destino}/${m.id}"><b>${m.nombre}</b>${cod}
+  if (!uds.length) return `<div class="card apagada"><b>${nombreModulo(m)}</b>${cod}<div class="sub">Próximamente</div></div>`;
+  return `<a class="card" href="#/${destino}/${m.id}"><b>${nombreModulo(m)}</b>${cod}
     <div class="sub">${uds.length} ${uds.length === 1 ? "unidad" : "unidades"}: ${uds.map(u => u.codigo).join(", ")}</div>
     ${barraProgreso(uds.flatMap(u => u.preguntas))}</a>`;
 }
@@ -45,7 +46,7 @@ function elegirAsignatura(destino, intro) {
 function vistaEstudio(modId) {
   const m = moduloPorId(modId);
   if (!m || !udsDeModulo(m.id).length) return elegirAsignatura("estudio", "Guía de estudio de cada unidad: teoría, fórmulas e ideas clave.");
-  $app.innerHTML = migas([["#/estudio", "Estudio"]]) + `<h1>${m.nombre}</h1><h2 class="paso">Elige la unidad</h2>` +
+  $app.innerHTML = migas([["#/estudio", "← Estudio"]]) + `<h1>${nombreModulo(m)}</h1><h2 class="paso">Elige la unidad</h2>` +
     udsDeModulo(m.id).map(u => `<a class="card" href="#/ud/${u.id}/guia"><b>${u.codigo} · ${u.titulo}</b>
       <div class="sub">${u.descripcion || ""}</div><div class="sub">${u.guia.length} apartados · ${u.preguntas.length} preguntas</div>
       ${barraProgreso(u.preguntas)}</a>`).join("");
@@ -63,7 +64,7 @@ function vistaGuia(ud, seccion) {
        ${s.apuntes ? `<p class="sub">📄 En clase: ${s.apuntes}</p>` : ""}${s.html}
        ${i + 1 < ud.guia.length ? `<p class="pie-seccion"><button type="button" data-ir="${i + 2}">Siguiente apartado →</button></p>` : ""}</details>`).join("") +
     `<div class="card"><b>¿Lo pones a prueba?</b><div class="pestanas">
-      <a class="btn btn-prim" href="#/ud/${ud.id}/practicar">✍️ Test de esta unidad</a>
+      <a class="btn btn-prim" href="#/ud/${ud.id}/practicar">🧪 Test de esta unidad</a>
       <a class="btn" href="#/ud/${ud.id}/examen">⏱️ Examen de esta unidad</a></div></div>`;
   $app.querySelectorAll("[data-ir]").forEach(b => b.onclick = () => {
     const d = document.getElementById(`sec-${b.dataset.ir}`); d.open = true; d.scrollIntoView({ behavior: "smooth" });
@@ -79,7 +80,7 @@ function vistaConfig(modo, modId) {
   const m = moduloPorId(modId), uds = m ? udsDeModulo(m.id) : [];
   if (!uds.length) return elegirAsignatura(modo, intro);
   const numeros = [10, 20, 30, 0], porDefecto = examen ? 10 : 20;
-  $app.innerHTML = migas([[`#/${modo}`, "← " + NOMBRES[modo]]]) + `<h1>${TITULOS[modo]} · ${m.nombre}</h1><p class="sub">${intro}</p>
+  $app.innerHTML = migas([[`#/${modo}`, "← " + NOMBRES[modo]]]) + `<h1>${TITULOS[modo]} · ${nombreModulo(m)}</h1><p class="sub">${intro}</p>
     <form id="f-config" class="card config">
       <fieldset><legend>¿Qué preguntas?</legend>
         <label class="eleccion"><input type="radio" name="origen" value="todo" checked> 🎲 <span><b>Aleatorias</b><br>
@@ -256,7 +257,7 @@ function siguiente(s) {
   pararReloj(); sesionActiva = null;
   const nota = (10 * s.aciertos / s.lista.length).toFixed(1).replace(".", ",");
   const fallos = s.respuestas.filter(r => !r.acierto);
-  $app.innerHTML = cabeceraSesion(s) + `<div class="card resultado"><h2>Resultado: ${s.aciertos}/${s.lista.length} · Nota ${nota}</h2>
+  $app.innerHTML = cabeceraSesion(s) + `<div class="card resultado"><h2>${(n => n >= 8 ? "🏆" : n >= 5 ? "🎯" : "📝")(10 * s.aciertos / s.lista.length)} Resultado: ${s.aciertos}/${s.lista.length} · Nota ${nota}</h2>
     <p class="sub">Tiempo: ${mmss(Date.now() - s.inicio)}</p>
     <div class="pestanas"><button class="btn-prim" id="otra">🔄 Otra ronda</button>
       ${fallos.length ? `<button id="repasar">🔁 Repetir las ${fallos.length} falladas</button>` : ""}
@@ -281,7 +282,7 @@ function aplicarTema(t) {
 function vistaAjustes() {
   const u = usuarioActual(), tema = temaGuardado();
   const resumen = MODULOS.filter(m => udsDeModulo(m.id).length)
-    .map(m => `<p><b>${m.nombre}</b></p>${barraProgreso(udsDeModulo(m.id).flatMap(x => x.preguntas))}`).join("");
+    .map(m => `<p><b>${nombreModulo(m)}</b></p>${barraProgreso(udsDeModulo(m.id).flatMap(x => x.preguntas))}`).join("");
   $app.innerHTML = `<h1>⚙️ Ajustes</h1>
     <section class="card"><h2>👤 Usuario</h2><p>Has entrado como <b id="aj-nombre"></b>.</p>
       ${u.remoto ? `<p class="sub">Para cerrar la sesión, cierra el navegador.</p>` : `<button id="aj-salir">Cerrar sesión</button>`}</section>

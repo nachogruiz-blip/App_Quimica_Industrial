@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#0f766e"/>
+  <rect width="512" height="512" rx="96" fill="#6d4fc2"/>
   <!-- Matraz Erlenmeyer: dibujo propio, dentro de la zona segura (80 %) para iconos «maskable» -->
   <path d="M206 120h100M222 120v92L146 352c-14 26 4 52 33 52h154c29 0 47-26 33-52l-76-140v-92" fill="none" stroke="#fff" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M182 300h148l26 50c7 14-2 32-18 32H174c-16 0-25-18-18-32z" fill="#5eead4"/>
-  <circle cx="232" cy="336" r="10" fill="#0f766e"/><circle cx="276" cy="352" r="7" fill="#0f766e"/>
+  <path d="M182 300h148l26 50c7 14-2 32-18 32H174c-16 0-25-18-18-32z" fill="#c4b5fd"/>
+  <circle cx="232" cy="336" r="10" fill="#6d4fc2"/><circle cx="276" cy="352" r="7" fill="#6d4fc2"/>
 </svg>
