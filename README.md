@@ -17,6 +17,7 @@ css/estilos.css     estilos (claro/oscuro)
 js/app.js           motor: guía, práctica, examen, fallos, progreso
 datos/registro.js   registro de unidades
 datos/udN.js        contenido de cada unidad didáctica (guía + preguntas)
+docs/               documentación del proyecto (estado, formato, flujo, derechos)
 materiales/         PDFs originales — ignorado por git, NO se sube
 ```
 
