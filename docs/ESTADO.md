@@ -10,7 +10,11 @@ privado de materiales, archivo `CONTEXTO_PRIVADO.md`: no lo copies aquí.
 A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio, explicaciones y banco de preguntas.
 
 ## Hecho
-- [x] Motor de la app (`js/app.js`): inicio por módulos, guía, práctica (20 preg.), examen (10), repaso de fallos, progreso local.
+- [x] Motor de la app (`js/app.js`): menú de 4 secciones **Estudio · Examen · Test · Ajustes** (barra inferior fija en
+  móvil ≤ 700 px, en la cabecera en pantallas anchas). Examen y Test: asignatura → aleatorias o temas (unidades y
+  apartados) → nº de preguntas (10/20/30/todas); Test con «solo falladas»; Examen con cronómetro; resultado con «Otra
+  ronda» y «Repetir las falladas». Ajustes: tema automático/día/noche, exportar/importar/borrar progreso, cerrar sesión.
+  Avisa antes de abandonar una ronda empezada. Rutas antiguas `#/ud/<id>/practicar|examen|fallos` siguen funcionando.
 - [x] Tipos de pregunta: `test`, `vf`, `numerica` (datos aleatorios + desarrollo de la solución).
 - [x] `js/utilidades.js`: fmt, área, Reynolds, régimen, factor 4f (Colebrook), pérdida de carga.
 - [x] **TSF UD5 Flujo de fluidos** (`datos/tsf_ud5.js`): 8 secciones de guía, 40 preguntas (17 test, 8 V/F, 15 numéricas).
@@ -36,7 +40,9 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 6. [ ] Publicar con acceso controlado: Cloudflare Workers con contraseña y luego repo privado. Publicada en workers.dev (2026-11-19). Acceso con `worker.mjs` (usuario/contraseña, secreto `USUARIOS`): falta que el
    usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
-7. [ ] (Menor) Pulsar la pestaña activa (p. ej. «Practicar» estando en Practicar) no reinicia la ronda, porque el hash no cambia.
+7. [x] Pulsar la pestaña activa vuelve a cargar la sección (resuelto con el nuevo menú).
+8. [ ] (Opcional) Instalable como app en el móvil (PWA): necesita `manifest.json` e icono; con `file://` el manifest da
+   error de consola, así que habría que cargarlo solo en Cloudflare. Preguntar al usuario.
 
 ## Inventario de materiales (repo privado `App_Quimica_Industrial_materials`)
 | Archivo | Módulo | Contenido | Usado en |

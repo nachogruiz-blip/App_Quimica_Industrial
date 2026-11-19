@@ -3,7 +3,8 @@
 // 1) Login local (crear usuario, contraseña incorrecta, invitado, importar progreso) y recuadro de novedades.
 // 2) Formato de preguntas y novedades; muestrea 200 veces cada numérica.
 // 3) Responde en el navegador todas las preguntas de cada UD (exige 100 % de aciertos y el desplegable «Explicación»).
-// 4) Modo Cloudflare (una sola pantalla de acceso) y control de acceso de worker.mjs.
+// 4) Navegación en móvil (Estudio, Examen, Test, Ajustes), Test por temas, Examen con cronómetro, modo noche.
+// 5) Modo Cloudflare (una sola pantalla de acceso) y control de acceso de worker.mjs.
 const path = require("path");
 const { chromium } = require("playwright");
 const URL = "file://" + path.resolve(__dirname, "..", "index.html");
@@ -123,6 +124,44 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
   }
   for (const vista of ["guia", "examen", "fallos"]) { await p.goto(`${URL}#/ud/${uds[0][0]}/${vista}`); await p.waitForTimeout(100); }
   await p.goto(URL);
+
+  // Navegación: 4 secciones (barra inferior en el móvil), elegir asignatura y temas en Test/Examen, Ajustes con tema.
+  {
+    const c = await navegador.newContext({ viewport: { width: 390, height: 844 } }), m = await c.newPage();
+    m.on("pageerror", e => errores.push("móvil: " + e.message));
+    m.on("dialog", d => d.accept());
+    const responderAlgo = () => m.click(".opcion", { timeout: 500 }).catch(async () => { await m.fill("#resp", "1"); await m.click("#f-num button"); });
+    await m.goto(URL); await m.click("#l-invitado"); await m.waitForSelector(".barra-prog");
+    if (await m.$("#novedades-ok")) await m.click("#novedades-ok");
+    const nav = await m.$$eval(".nav-principal a", as => as.map(a => a.lastChild.textContent.trim()));
+    if (nav.join(",") !== "Estudio,Examen,Test,Ajustes") problemas.push("navegación: pestañas «" + nav.join(",") + "», se esperaban Estudio, Examen, Test y Ajustes");
+    const abajo = await m.$eval(".nav-principal", n => getComputedStyle(n).position === "fixed" && Math.abs(n.getBoundingClientRect().bottom - innerHeight) < 2);
+    if (!abajo) problemas.push("navegación: en el móvil la barra no está fija abajo");
+    if (await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) problemas.push("móvil: la página se desborda a lo ancho");
+    // Test de un tema concreto: solo el apartado 2, todas sus preguntas
+    await m.click('a[data-nav="test"]'); await m.click('a.card[href="#/test/tsf"]'); await m.check('input[value="temas"]');
+    await m.click(".tema summary");
+    for (const c2 of await m.$$('input[name="sec"]')) if ((await c2.getAttribute("value")) !== "tsf-ud5#2") await c2.uncheck();
+    await m.check('.segmentado input[value="0"]', { force: true }); await m.click("#empezar");
+    const secciones = new Set();
+    for (;;) {
+      secciones.add(await m.evaluate(() => __actual.q.seccion));
+      await responderAlgo();
+      const ultima = (await m.textContent("#sig")).includes("resultado"); await m.click("#sig"); if (ultima) break;
+    }
+    if ([...secciones].join() !== "2") problemas.push("Test por temas: salen preguntas de los apartados " + [...secciones]);
+    if (!(await m.$("#otra"))) problemas.push("Test: falta «Otra ronda» en el resultado");
+    // Examen: cronómetro y sin corrección por pregunta
+    await m.click('a[data-nav="examen"]'); await m.click('a.card[href="#/examen/tsf"]'); await m.click("#empezar");
+    if (!(await m.$("#reloj"))) problemas.push("Examen: no se ve el cronómetro");
+    await responderAlgo();
+    if (await m.$("#fb .feedback")) problemas.push("Examen: corrige antes de terminar");
+    // Ajustes: modo noche, exportar/importar
+    await m.click('a[data-nav="ajustes"]'); await m.check('input[name="tema"][value="dark"]', { force: true });
+    if ((await m.evaluate(() => document.documentElement.dataset.theme)) !== "dark") problemas.push("Ajustes: no cambia a modo noche");
+    if (!(await m.$("#exportar")) || !(await m.$("#importar"))) problemas.push("Ajustes: faltan exportar/importar progreso");
+    await c.close();
+  }
 
   // Modo Cloudflare: el worker ya pidió la contraseña; la app usa ese usuario sin segundo login (simulado con page.route).
   {

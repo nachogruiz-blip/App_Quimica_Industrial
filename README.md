@@ -2,7 +2,7 @@
 
 App de estudio para asignaturas del Grado Superior de Química Industrial: **guía de estudio**,
 **banco de preguntas** (test, verdadero/falso y problemas numéricos con datos aleatorios),
-**modo examen** y **repaso de fallos**. Web estática: funciona abriendo `index.html` o desde GitHub Pages.
+**modo examen** y **repaso de fallos**. Web estática: funciona abriendo `index.html` o publicada en Cloudflare con usuario y contraseña (no se usa GitHub Pages).
 
 ## Contenido
 | Módulo | Unidades |
@@ -16,9 +16,16 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 - Online con acceso solo para personas autorizadas (usuario y contraseña): Cloudflare Workers, ver
   [`docs/despliegue_cloudflare.md`](docs/despliegue_cloudflare.md).
 
-Al entrar se crea un usuario con contraseña (o se entra como invitado). Los usuarios y el progreso se guardan solo en ese
-navegador (localStorage): se mantienen al cerrarlo, pero se pierden si se borran los datos de navegación. Para pasar el
-progreso a otro dispositivo: *Exportar progreso* (archivo `.json`) e *Importar progreso* en el otro.
+Menú con cuatro secciones (en el móvil, botones en la parte inferior; en el ordenador, en la barra de arriba):
+- **Estudio**: asignatura → unidad → guía de estudio.
+- **Examen**: asignatura → preguntas aleatorias o de temas/apartados elegidos → nota y tiempo al final.
+- **Test**: igual, pero corrige y explica cada pregunta; opción «solo las que he fallado».
+- **Ajustes**: modo día/noche, exportar/importar progreso, cerrar sesión, novedades.
+
+En Cloudflare se entra con el usuario y la contraseña del secreto `USUARIOS`. Abriendo `index.html` en local se crea un
+usuario local (o se entra como invitado). El progreso se guarda solo en ese navegador (localStorage): se mantiene al
+cerrarlo, pero se pierde si se borran los datos de navegación. Para pasarlo a otro dispositivo: *Ajustes → Exportar
+progreso* (archivo `.json`) e *Importar progreso* en el otro.
 
 ## Documentación
 Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [`docs/ESTADO.md`](docs/ESTADO.md).
@@ -31,7 +38,7 @@ worker.mjs          en Cloudflare, pide usuario y contraseña antes de servir la
 wrangler.jsonc      configuración de Cloudflare (Workers con archivos estáticos)
 .assetsignore       lo que NO se publica (docs, tests, .md, .git)
 css/estilos.css     estilos (claro/oscuro)
-js/app.js           motor: guía, práctica, examen, fallos, progreso
+js/app.js           motor: menú (Estudio, Examen, Test, Ajustes), guía, rondas de preguntas, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
 js/usuarios.js      login local (usuario/contraseña con hash), progreso por usuario, importar
 datos/registro.js   módulos y registro de unidades

@@ -1,4 +1,4 @@
-# Publicar la app con acceso controlado (Cloudflare Workers + Cloudflare Access)
+# Publicar la app con acceso controlado (Cloudflare Workers + usuario y contraseña)
 
 Objetivo: que **solo las personas que tú autorices** puedan abrir la app, y que el repo de GitHub pueda ser
 **privado**. Sustituye a GitHub Pages, que siempre publica en abierto.
