@@ -15,6 +15,9 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 - [x] `js/utilidades.js`: fmt, área, Reynolds, régimen, factor 4f (Colebrook), pérdida de carga.
 - [x] **TSF UD5 Flujo de fluidos** (`datos/tsf_ud5.js`): 8 secciones de guía, 40 preguntas (17 test, 8 V/F, 15 numéricas).
 - [x] Comprobación automática `node tests/comprobar.js`.
+- [x] Una sola pantalla de acceso en Cloudflare: `worker.mjs` expone `/__usuario` y la app usa ese usuario (sin login local);
+  el login local solo aparece al abrir `index.html` en local. Recuadro de novedades al entrar (`datos/novedades.js`).
+  Desplegable «💡 Explicación» con «Dónde estudiarlo» (guía en nueva pestaña, apuntes con apartado y página, ejercicios).
 - [x] Login local con usuario/contraseña (`js/usuarios.js`): perfiles por navegador, modo invitado, progreso por usuario,
   exportar/importar progreso a `.json`. El test prueba el login.
 - [x] Privacidad: sin referencias al centro ni a personas en el repo público (historial reescrito); el contexto privado está en

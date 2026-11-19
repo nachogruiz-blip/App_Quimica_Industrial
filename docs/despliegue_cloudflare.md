@@ -51,7 +51,8 @@ Basic sobre HTTPS) y los compara con el secreto `USUARIOS`. Sin `USUARIOS`, nadi
 | **Denegar o quitar** el acceso | Borra su línea del secreto. Deja de entrar en cuanto se guarda |
 | Cambiar una contraseña | Edita su línea |
 
-Para «cerrar sesión» de esta ventana hay que cerrar el navegador (es como funciona HTTP Basic).
+Es la **única** pantalla de acceso: la app pregunta al worker (`/__usuario`) quién ha entrado y guarda el progreso con
+ese usuario, sin pedir otro login. Para «cerrar sesión» hay que cerrar el navegador (es como funciona HTTP Basic).
 
 ### Alternativa con tarjeta: Cloudflare Access
 Si algún día se pone la tarjeta (el plan Free de Zero Trust no cobra hasta 50 usuarios): *Zero Trust → Access controls →
@@ -67,5 +68,6 @@ Cloudflare sigue publicando cada push porque tiene acceso por su integración co
 
 ## Cómo encaja con la app
 - **`worker.mjs` + secreto `USUARIOS`** decide **quién puede abrir** la app (o Cloudflare Access, si se pone tarjeta).
-- **El login de la app** (`js/usuarios.js`) solo separa el **progreso** de cada persona en su navegador.
+- En Cloudflare, el progreso se guarda con el usuario de `USUARIOS`. El login local de la app (`js/usuarios.js`) solo
+  aparece al abrir `index.html` descargado, sin servidor.
 - La app sigue funcionando también descargada y abriendo `index.html` (en local no hay control de acceso).

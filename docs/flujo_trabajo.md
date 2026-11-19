@@ -12,5 +12,6 @@
 6. **Comprobar**: `node tests/comprobar.js` (valida formato, muestrea numéricas, responde todas en Chromium y revisa seguridad)
    y `node tests/derechos.js` (busca frases copiadas de los PDFs). Ver «Revisiones obligatorias» en `CLAUDE.md`.
    Opcional: captura en móvil (390×844) para revisar el aspecto.
-7. **Actualizar `docs/ESTADO.md`** (hecho, pendiente, inventario, tabla de unidades) y commit + push a `main`.
+7. **Añadir la novedad** al principio de `datos/novedades.js` (p. ej. «Nueva unidad: TSF UD7 Gases industriales»).
+   **Actualizar `docs/ESTADO.md`** (hecho, pendiente, inventario, tabla de unidades) y commit + push a `main`.
 8. Pedir al usuario que revise la unidad; sus preferencias van a «Decisiones» de `docs/ESTADO.md`.

@@ -9,7 +9,8 @@ registrarUD({
   codigo: "UD5",
   titulo: "Flujo de fluidos",
   descripcion: "Una línea",
-  guia: [ { titulo: "1. Sección", html: `<p>…</p>` }, … ],
+  ejercicios: "Relación de ejercicios de la UD5",   // opcional: se cita en «Dónde estudiarlo» de las numéricas
+  guia: [ { titulo: "1. Sección", apuntes: "Apuntes UD5, apartado 1 (pág. 1)", html: `<p>…</p>` }, … ],
   preguntas: [ … ]
 });
 ```
@@ -17,6 +18,8 @@ Añade `<script src="datos/<modulo>_udN.js"></script>` en `index.html` después 
 Un módulo nuevo se añade a `MODULOS` en `datos/registro.js`.
 
 ## Guía (`guia[]`)
+- `apuntes`: dónde está ese contenido en los apuntes de clase (apartado y páginas del PDF; solo la referencia, nunca texto copiado).
+  Se muestra en la guía y en «Dónde estudiarlo» de cada pregunta de esa sección.
 - Una sección por apartado del PDF, en el mismo orden. Al final: «Método para resolver problemas» y «Formulario».
 - Clases HTML disponibles:
   - `<div class="formula">…</div>` fórmula destacada (`<sub>`, `<sup>`, `·`, `Δ`, `√`…).
@@ -24,7 +27,11 @@ Un módulo nuevo se añade a `MODULOS` en `datos/registro.js`.
   - `<table class="tabla">`, `<h4>`, `<ul>/<ol>`, `<details><summary>` desplegables.
 
 ## Preguntas (`preguntas[]`)
-Campos comunes: `id`, `tipo`, `seccion` (nº de sección de la guía, empieza en 1), `enunciado`, `explicacion`.
+Campos comunes: `id`, `tipo`, `seccion` (nº de sección de la guía, empieza en 1; **obligatorio**: alimenta «Dónde estudiarlo»),
+`enunciado`, `explicacion`. Opcional: `fuente` (texto extra para «Dónde estudiarlo», p. ej. «Relación de ejercicios UD5, problema tipo 3»).
+
+Al responder, la explicación sale en un desplegable «💡 Explicación» con «Dónde estudiarlo»: enlace a la sección de la guía
+(nueva pestaña), `apuntes` de esa sección y, en las numéricas, `ejercicios` de la UD.
 
 **IDs**: `<abreviatura módulo><nº UD>-<n>` para conceptuales y `-n<n>` para numéricas (`tsf5-12`, `tsf5-n3`).
 **Nunca renumerar ni reutilizar** un id: el progreso del usuario se guarda por id. Para quitar una pregunta, bórrala y no reutilices su id.

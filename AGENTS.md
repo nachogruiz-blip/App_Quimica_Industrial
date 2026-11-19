@@ -16,7 +16,10 @@ App web estática de estudio para Química Industrial (FP Grado Superior). Docum
 - Seguir la notación de los apuntes de clase (ver «Decisiones» en `docs/ESTADO.md`).
 - IDs de pregunta estables (`tsf5-12`, `tsf5-n3`): nunca renumerar, el progreso del usuario se guarda por ID.
 - **Nunca** subir PDFs ni copiar texto/tablas/figuras literales de los materiales.
-- Cada pregunta lleva explicación; las numéricas, el desarrollo con los valores concretos.
+- Cada pregunta lleva explicación y `seccion`; las numéricas, el desarrollo con los valores concretos. Cada sección de la
+  guía lleva `apuntes` (dónde está en los apuntes de clase) para el bloque «Dónde estudiarlo».
+- **Novedades**: todo cambio que note el usuario (unidad nueva, función nueva, cambio de uso) añade una entrada AL PRINCIPIO
+  de `datos/novedades.js` (id = fecha, título, 2–4 puntos sencillos). Se muestran en un recuadro al entrar. No cambies ids publicados.
 - Tras cambios: `node tests/comprobar.js` debe terminar en «✅ Todo correcto».
 - Commits en español, push a `main` (si la sesión indica otra rama, usa esa y avisa al usuario).
 

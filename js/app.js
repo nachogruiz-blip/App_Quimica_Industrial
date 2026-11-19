@@ -29,7 +29,8 @@ function vistaInicio() {
       el modo incógnito, y no pasa solo a otro navegador o dispositivo: para eso, expórtalo a un archivo e impórtalo allí.</p>
       <div class="pestanas"><button id="exportar">⬇️ Exportar progreso</button><label class="btn">⬆️ Importar progreso
       <input type="file" id="importar" accept=".json,application/json" hidden></label><button id="reset">Borrar progreso</button></div>
-      <p class="sub" id="msg-progreso"></p></div>`;
+      <p class="sub" id="msg-progreso"></p></div>
+    <p class="sub"><a href="#/novedades">🆕 Novedades de la app</a></p>`;
   const msg = document.getElementById("msg-progreso");
   document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo tu progreso?")) { guardar({}); vistaInicio(); } };
   document.getElementById("exportar").onclick = () => {
@@ -89,6 +90,7 @@ function pintarUsuario() {
   const nombre = document.createElement("span"); nombre.className = "sub"; nombre.textContent = "👤 " + u.nombre;
   const salir = document.createElement("button"); salir.className = "btn-icono"; salir.id = "salir"; salir.textContent = "Salir";
   salir.onclick = () => { cerrarSesion(); if (location.hash && location.hash !== "#/") location.hash = "#/"; else router(); };
+  if (u.remoto) { nombre.title = "Para salir, cierra el navegador"; return zona.append(nombre); }
   zona.append(nombre, " ", salir);
 }
 
@@ -99,9 +101,26 @@ function cabeceraUD(ud, activa) {
     <nav class="pestanas">${t.map(([k, n]) => `<a class="btn ${k === activa ? "activa" : ""}" href="#/ud/${ud.id}/${k}">${n}</a>`).join("")}</nav>`;
 }
 
-function vistaGuia(ud) {
+function vistaGuia(ud, seccion) {
+  const abierta = seccion >= 1 && seccion <= ud.guia.length ? seccion - 1 : 0;
   $app.innerHTML = cabeceraUD(ud, "guia") + ud.guia.map((s, i) =>
-    `<details class="card" ${i === 0 ? "open" : ""}><summary>${s.titulo}</summary>${s.html}</details>`).join("");
+    `<details class="card" id="sec-${i + 1}" ${i === abierta ? "open" : ""}><summary>${s.titulo}</summary>
+     ${s.apuntes ? `<p class="sub">📄 En clase: ${s.apuntes}</p>` : ""}${s.html}</details>`).join("");
+  if (abierta) document.getElementById(`sec-${abierta + 1}`).scrollIntoView();
+}
+
+// «Dónde estudiarlo»: sección de la guía (se abre en otra pestaña para no perder la ronda), apuntes y ejercicios.
+function dondeEstudiar(ud, q) {
+  const sec = q.seccion && ud.guia[q.seccion - 1], partes = [];
+  if (sec) partes.push(`📖 Guía: <a href="#/ud/${ud.id}/guia?s=${q.seccion}" target="_blank" rel="noopener">${sec.titulo}</a>`);
+  if (sec && sec.apuntes) partes.push(`📄 ${sec.apuntes}`);
+  if (q.fuente) partes.push(`📌 ${q.fuente}`);
+  else if (q.tipo === "numerica" && ud.ejercicios) partes.push(`📝 Practica problemas de este tipo en la ${ud.ejercicios.charAt(0).toLowerCase() + ud.ejercicios.slice(1)}`);
+  return partes.length ? `<div class="donde"><b>Dónde estudiarlo</b><br>${partes.join("<br>")}</div>` : "";
+}
+function bloqueExplicacion(ud, q, v, abierto) {
+  const exp = typeof q.explicacion === "function" ? q.explicacion(v) : q.explicacion;
+  return `<details class="explicacion"${abierto ? " open" : ""}><summary>💡 Explicación</summary><p>${exp || ""}</p>${dondeEstudiar(ud, q)}</details>`;
 }
 
 // Sesión de preguntas (práctica, examen o fallos)
@@ -157,9 +176,8 @@ function mostrarPregunta(s) {
     anotar(q.id, acierto); if (acierto) s.aciertos++;
     s.respuestas.push({ q, acierto, v });
     if (examen) return siguiente(s);
-    const exp = typeof q.explicacion === "function" ? q.explicacion(v) : q.explicacion;
     document.getElementById("fb").innerHTML = `<div class="feedback ${acierto ? "ok" : "ko"}">
-      <b>${acierto ? "✅ Correcto" : "❌ Incorrecto"}</b>${extra}<p>${exp || ""}</p>
+      <b>${acierto ? "✅ Correcto" : "❌ Incorrecto"}</b>${extra}${bloqueExplicacion(s.ud, q, v, false)}
       <button class="btn-prim" id="sig">${s.i + 1 < s.lista.length ? "Siguiente →" : "Ver resultado"}</button></div>`;
     document.getElementById("sig").onclick = () => siguiente(s);
   };
@@ -196,10 +214,9 @@ function siguiente(s) {
   const fallos = s.respuestas.filter(r => !r.acierto);
   $app.innerHTML = cabeceraUD(s.ud, s.modo) + `<div class="card"><h2>Resultado: ${s.aciertos}/${s.lista.length} · Nota ${nota}</h2>
     <p class="sub">Tiempo: ${min} min</p>
-    ${fallos.length ? "<h3>Repasa:</h3>" + fallos.map(r => {
-      const e = typeof r.q.explicacion === "function" ? r.q.explicacion(r.v) : r.q.explicacion;
-      return `<details class="card"><summary>${r.v ? sustituir(r.q.enunciado, r.v) : r.q.enunciado}</summary><p>${e || ""}</p></details>`;
-    }).join("") : "<p>🎉 ¡Todo correcto!</p>"}
+    ${fallos.length ? "<h3>Repasa:</h3>" + fallos.map(r =>
+      `<div class="card"><p><b>${r.v ? sustituir(r.q.enunciado, r.v) : r.q.enunciado}</b></p>${bloqueExplicacion(s.ud, r.q, r.v, false)}</div>`
+    ).join("") : "<p>🎉 ¡Todo correcto!</p>"}
     <a class="btn btn-prim" href="#/ud/${s.ud.id}/${s.modo}?r=${Date.now()}">Otra ronda</a></div>`;
 }
 
@@ -207,15 +224,54 @@ function siguiente(s) {
 function router() {
   pintarUsuario();
   if (!usuarioActual()) return vistaLogin();
-  const [, , id, vista] = location.hash.split("?")[0].split("/");
+  const [ruta, consulta = ""] = location.hash.split("?");
+  const [, seccionRuta, id, vista] = ruta.split("/");
+  mostrarNovedades(false);
+  if (seccionRuta === "novedades") return vistaNovedades();
   const ud = id && udPorId(id);
   if (!ud) return vistaInicio();
-  if (vista === "guia" || !vista) return vistaGuia(ud);
-  iniciarSesion(ud, vista);
   window.scrollTo(0, 0);
+  if (vista === "guia" || !vista) return vistaGuia(ud, +new URLSearchParams(consulta).get("s"));
+  iniciarSesion(ud, vista);
 }
+
+// ---------- Novedades ----------
+// Recuadro al entrar con las novedades que este usuario no ha visto (datos/novedades.js). Se construye con textContent.
+const claveNovedades = () => `qi-novedades:${usuarioActual().id}`;
+function listaNovedades(entradas) {
+  const cont = document.createElement("div");
+  for (const n of entradas) {
+    const h = document.createElement("h3"); h.textContent = n.titulo;
+    const f = document.createElement("p"); f.className = "sub"; f.textContent = n.id.slice(0, 10).split("-").reverse().join("/");
+    const ul = document.createElement("ul");
+    for (const p of n.puntos) { const li = document.createElement("li"); li.textContent = p; ul.append(li); }
+    cont.append(h, f, ul);
+  }
+  return cont;
+}
+function mostrarNovedades(forzar) {
+  const todas = window.NOVEDADES || [];
+  if (!todas.length || document.getElementById("novedades")) return;
+  const vista = almacen.leer(claveNovedades(), null);
+  const nuevas = forzar ? todas.slice(0, 3) : todas.slice(0, Math.min(3, (i => i < 0 ? todas.length : i)(todas.findIndex(n => n.id === vista))));
+  if (!nuevas.length) return;
+  const fondo = document.createElement("div"); fondo.id = "novedades"; fondo.className = "modal";
+  const caja = document.createElement("div"); caja.className = "card"; caja.setAttribute("role", "dialog"); caja.setAttribute("aria-modal", "true");
+  const t = document.createElement("h2"); t.textContent = "🆕 Novedades";
+  const ok = document.createElement("button"); ok.className = "btn-prim"; ok.id = "novedades-ok"; ok.textContent = "Entendido";
+  const todasLink = document.createElement("a"); todasLink.href = "#/novedades"; todasLink.textContent = "Ver todas las novedades";
+  const cerrar = () => { almacen.escribir(claveNovedades(), todas[0].id); fondo.remove(); };
+  ok.onclick = cerrar; todasLink.onclick = cerrar;
+  const pie = document.createElement("p"); pie.className = "pestanas"; pie.append(ok, todasLink);
+  caja.append(t, listaNovedades(nuevas), pie); fondo.append(caja); document.body.append(fondo); ok.focus({ preventScroll: true }); caja.scrollTop = 0;
+}
+function vistaNovedades() {
+  $app.innerHTML = `<p class="sub"><a href="#/">← Inicio</a></p><h1>🆕 Novedades</h1><div class="card" id="todas-novedades"></div>`;
+  document.getElementById("todas-novedades").append(listaNovedades(window.NOVEDADES || []));
+}
+
 window.addEventListener("hashchange", router);
-router();
+detectarUsuarioRemoto().finally(router);
 
 // Tema claro/oscuro manual
 document.getElementById("tema-btn").onclick = () => {

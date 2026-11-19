@@ -1,9 +1,9 @@
 // Comprobación automática de la app: node tests/comprobar.js
 // Requiere Playwright con Chromium (preinstalado en el entorno de Claude Code; si no: npm i -D playwright && npx playwright install chromium).
-// 1) Valida el formato de todas las preguntas y muestrea 200 veces cada numérica.
-// 3) Prueba el control de acceso de Cloudflare (worker.mjs).
-// 0) Prueba el login local (crear usuario, contraseña incorrecta, invitado, importar progreso).
-// 2) Responde en el navegador todas las preguntas de cada UD con la solución correcta y exige 100 % de aciertos.
+// 1) Login local (crear usuario, contraseña incorrecta, invitado, importar progreso) y recuadro de novedades.
+// 2) Formato de preguntas y novedades; muestrea 200 veces cada numérica.
+// 3) Responde en el navegador todas las preguntas de cada UD (exige 100 % de aciertos y el desplegable «Explicación»).
+// 4) Modo Cloudflare (una sola pantalla de acceso) y control de acceso de worker.mjs.
 const path = require("path");
 const { chromium } = require("playwright");
 const URL = "file://" + path.resolve(__dirname, "..", "index.html");
@@ -23,16 +23,24 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
   if (!(await p.$("#f-login"))) fallosLogin.push("sin sesión no aparece el login");
   await login("prueba", "clave-1");
   if (!(await p.$(".card .barra-prog"))) fallosLogin.push("no entra tras crear usuario");
+  const cerrarNovedades = async () => { if (await p.$("#novedades-ok")) await p.click("#novedades-ok"); };
+  if (!(await p.$("#novedades"))) fallosLogin.push("al entrar por primera vez no salen las novedades");
+  await cerrarNovedades();
+  await p.reload(); await p.waitForSelector(".barra-prog");
+  if (await p.$("#novedades")) fallosLogin.push("las novedades vuelven a salir después de cerrarlas");
   if (!(await p.textContent("#usuario-barra")).includes("prueba")) fallosLogin.push("la barra no muestra el usuario");
   await p.evaluate(() => { const ud = UNIDADES[0]; guardar({ [ud.preguntas[0].id]: { a: 1, f: 0, ultimo: true } }); });
   await p.click("#salir");
   await login("prueba", "mala");
   if (!(await p.textContent("#l-error")).includes("incorrectos")) fallosLogin.push("acepta una contraseña incorrecta");
-  await p.click("#l-invitado");
+  await p.click("#l-invitado"); await p.waitForSelector(".barra-prog"); await cerrarNovedades();
   if ((await p.evaluate(() => Object.keys(cargar()).length)) !== 0) fallosLogin.push("el invitado ve el progreso de otro usuario");
   await p.click("#salir");
   await login("Prueba", "clave-1");
   if ((await p.evaluate(() => Object.keys(cargar()).length)) !== 1) fallosLogin.push("al volver a entrar no recupera su progreso");
+  if (await p.$("#novedades")) fallosLogin.push("salen novedades ya vistas por este usuario");
+  await p.goto(URL + "#/ud/tsf-ud5/guia?s=3"); await p.waitForSelector("#sec-3");
+  if (!(await p.$eval("#sec-3", e => e.open)) || (await p.$eval("#sec-1", e => e.open))) fallosLogin.push("la guía no abre la sección pedida (?s=3)");
   const mezcla = await p.evaluate(() => JSON.stringify(mezclarProgreso({ x: { a: 1, f: 0, ultimo: true } },
     { x: { a: 2, f: 1, ultimo: false }, y: { a: "<img>", f: 0 }, z: { a: 0, f: 1, ultimo: false } })));
   if (mezcla !== JSON.stringify({ x: { a: 2, f: 1, ultimo: false }, z: { a: 0, f: 1, ultimo: false } })) fallosLogin.push("importar progreso mezcla mal: " + mezcla);
@@ -40,13 +48,20 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
 
   const problemas = await p.evaluate(() => {
     const mal = [], ids = new Set();
+    const nov = window.NOVEDADES || [];
+    if (!nov.length) mal.push("novedades: la lista está vacía");
+    nov.forEach((n, i) => {
+      if (!/^\d{4}-\d{2}-\d{2}(-\d+)?$/.test(n.id) || !n.titulo || !Array.isArray(n.puntos) || !n.puntos.length) mal.push(`novedades: entrada ${i} mal formada`);
+      if (i && !(n.id < nov[i - 1].id)) mal.push(`novedades: «${n.id}» debe ir detrás (la más reciente primero, ids únicos)`);
+    });
     for (const ud of UNIDADES) {
       if (!MODULOS.some(m => m.id === ud.modulo)) mal.push(`${ud.id}: módulo desconocido ${ud.modulo}`);
+      ud.guia.forEach((s, i) => { if (!s.apuntes) mal.push(`${ud.id}: la sección ${i + 1} de la guía no tiene «apuntes»`); });
       for (const q of ud.preguntas) {
         const t = `${ud.id}/${q.id}`;
         if (ids.has(q.id)) mal.push(`${t}: id duplicado`); ids.add(q.id);
         if (!q.enunciado || !q.explicacion) mal.push(`${t}: falta enunciado o explicación`);
-        if (q.seccion && !ud.guia[q.seccion - 1]) mal.push(`${t}: sección ${q.seccion} no existe`);
+        if (!ud.guia[q.seccion - 1]) mal.push(`${t}: falta «seccion» o no existe la sección ${q.seccion}`);
         if (q.tipo === "test" && !(q.correcta >= 0 && q.correcta < q.opciones.length)) mal.push(`${t}: correcta fuera de rango`);
         if (q.tipo === "vf" && typeof q.correcta !== "boolean") mal.push(`${t}: correcta no booleana`);
         if (q.tipo === "numerica") for (let i = 0; i < 200; i++) {
@@ -98,6 +113,7 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
         else await p.click(`.opcion[data-k="${q.correcta}"]`);
         const fb = await p.textContent("#fb");
         if (!fb.includes("Correcto") || fb.includes("Incorrecto")) problemas.push(`${id}/${q.id}: la respuesta correcta se marcó como fallo`);
+        if (!(await p.$("#fb details.explicacion .donde a[target=_blank]"))) problemas.push(`${id}/${q.id}: falta el desplegable «Explicación» con dónde estudiarlo`);
         const ultima = (await p.textContent("#sig")).includes("resultado");
         await p.click("#sig");
         if (ultima) break;
@@ -108,6 +124,23 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
   for (const vista of ["guia", "examen", "fallos"]) { await p.goto(`${URL}#/ud/${uds[0][0]}/${vista}`); await p.waitForTimeout(100); }
   await p.goto(URL);
 
+  // Modo Cloudflare: el worker ya pidió la contraseña; la app usa ese usuario sin segundo login (simulado con page.route).
+  {
+    const c = await navegador.newContext(), q = await c.newPage(), fs2 = require("fs");
+    q.on("pageerror", e => errores.push("modo Cloudflare: " + e.message));
+    await q.route("http://app.test/**", ruta => {
+      const ruta2 = new globalThis.URL(ruta.request().url()).pathname;
+      if (ruta2 === "/__usuario") return ruta.fulfill({ json: { usuario: "Nacho" } });
+      const f = path.join(__dirname, "..", ruta2 === "/" ? "index.html" : ruta2);
+      return fs2.existsSync(f) ? ruta.fulfill({ path: f }) : ruta.fulfill({ status: 404 });
+    });
+    await q.goto("http://app.test/"); await q.waitForSelector(".barra-prog, #f-login");
+    if (await q.$("#f-login")) problemas.push("modo Cloudflare: pide un segundo login");
+    const barra = await q.textContent("#usuario-barra");
+    if (!barra.includes("Nacho") || (await q.$("#salir"))) problemas.push("modo Cloudflare: la barra debe mostrar el usuario y no «Salir»");
+    if (!(await q.$("#novedades"))) problemas.push("modo Cloudflare: no salen las novedades al entrar");
+    await c.close();
+  }
   await navegador.close();
 
   // Control de acceso en Cloudflare (worker.mjs): sin usuarios → 503; sin clave o clave mala → 401; clave buena → la app.

@@ -1,6 +1,8 @@
 // Control de acceso de la app en Cloudflare (sin tarjeta): pide usuario y contraseña (HTTP Basic) antes de servir nada.
 // Solo se usa en Cloudflare; en local (abrir index.html) no interviene. Ver docs/despliegue_cloudflare.md.
 //
+// La app consulta /__usuario para saber quién ha entrado y no pide un segundo login.
+//
 // Usuarios autorizados: secreto USUARIOS del Worker (Settings → Variables and Secrets → tipo Secret), una persona por
 // línea o separadas por comas:   ana:una-contraseña-larga, luis:otra-contraseña
 // Aceptar a alguien = añadir su línea; denegar = borrarla. Sin USUARIOS no entra nadie (falla cerrado).
@@ -15,14 +17,14 @@ const SEGURIDAD = {
   "Cache-Control": "private, no-store"
 };
 
-/** Lee el secreto USUARIOS → Map(usuario → contraseña). La contraseña puede contener «:», pero no comas. */
+/** Lee el secreto USUARIOS → Map(usuario en minúsculas → { nombre, clave }). La contraseña puede contener «:», pero no comas. */
 export function leerUsuarios(texto) {
   const m = new Map();
   for (const linea of String(texto || "").split(/[\n,]/)) {
     const i = linea.indexOf(":");
     if (i < 1) continue;
     const u = linea.slice(0, i).trim(), c = linea.slice(i + 1).trim();
-    if (u && c) m.set(u.toLowerCase(), c);
+    if (u && c) m.set(u.toLowerCase(), { nombre: u, clave: c });
   }
   return m;
 }
@@ -64,13 +66,16 @@ export default {
       { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }));
 
     const cred = leerCredenciales(peticion.headers.get("Authorization"));
-    const esperada = cred && usuarios.get(cred[0]);
+    const cuenta = cred && usuarios.get(cred[0]), esperada = cuenta?.clave;
     // Se compara siempre (aunque el usuario no exista) para no revelar qué usuarios hay.
     const ok = await iguales(cred ? cred[1] : "", esperada ?? "\u0000sin-usuario");
     if (!cred || esperada === undefined || !ok) {
       if (cred) await new Promise(r => setTimeout(r, 700)); // frena los intentos de adivinar contraseñas
       return pedirClave("Usuario o contraseña incorrectos.");
     }
+    // La app pregunta quién ha entrado para usar ese usuario directamente (una sola pantalla de acceso).
+    if (new URL(peticion.url).pathname === "/__usuario")
+      return conCabeceras(Response.json({ usuario: cuenta.nombre }));
     return conCabeceras(await env.ASSETS.fetch(peticion));
   }
 };

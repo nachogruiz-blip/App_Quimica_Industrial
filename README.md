@@ -35,6 +35,7 @@ js/app.js           motor: guía, práctica, examen, fallos, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
 js/usuarios.js      login local (usuario/contraseña con hash), progreso por usuario, importar
 datos/registro.js   módulos y registro de unidades
+datos/novedades.js  novedades que se muestran al entrar (la más reciente primero)
 datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
 tests/comprobar.js  comprobación automática: errores y seguridad (node tests/comprobar.js)
 tests/derechos.js   busca copias literales de los PDFs (node tests/derechos.js)

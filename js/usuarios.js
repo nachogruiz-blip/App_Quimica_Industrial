@@ -47,7 +47,25 @@ const algDisponible = () => (window.crypto && crypto.subtle ? "pbkdf2" : "sha256
 const normalizar = n => n.trim().toLowerCase();
 const nombreValido = n => /^[\p{L}\p{N}_.-]{2,30}$/u.test(n.trim());
 
+// En Cloudflare, worker.mjs ya ha pedido usuario y contraseña: la app usa ese usuario y no muestra su propio login.
+// En local (index.html abierto como archivo) no hay worker y se usa el login local de abajo.
+let USUARIO_REMOTO = null;
+async function detectarUsuarioRemoto() {
+  if (!/^https?:$/.test(location.protocol)) return null;
+  try {
+    const r = await fetch("/__usuario", { cache: "no-store", credentials: "same-origin" });
+    const d = r.ok ? await r.json() : null;
+    if (d && typeof d.usuario === "string" && d.usuario.trim()) {
+      USUARIO_REMOTO = d.usuario.trim().slice(0, 40);
+      const antiguo = almacen.leer(PROGRESO, null), clave = claveProgreso();
+      if (antiguo && !almacen.leer(clave, null)) { almacen.escribir(clave, antiguo); try { localStorage.removeItem(PROGRESO); } catch {} }
+    }
+  } catch { /* sin worker (p. ej. otro servidor): login local */ }
+  return USUARIO_REMOTO;
+}
+
 function usuarioActual() {
+  if (USUARIO_REMOTO) return { id: "cf:" + USUARIO_REMOTO.toLowerCase(), nombre: USUARIO_REMOTO, remoto: true };
   let u = null;
   try { u = sessionStorage.getItem(SESION) || localStorage.getItem(SESION); } catch {}
   if (u === INVITADO) return { id: INVITADO, nombre: "Invitado" };

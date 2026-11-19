@@ -7,9 +7,11 @@ registrarUD({
   codigo: "UD5",
   titulo: "Flujo de fluidos",
   descripcion: "Régimen laminar/turbulento, Reynolds, Bernoulli generalizada, pérdidas de carga",
+  ejercicios: "Relación de ejercicios de la UD5",
   guia: [
     {
       titulo: "1. Líneas de corriente y tipos de flujo",
+      apuntes: "Apuntes UD5, apartado 1 (pág. 1)",
       html: `
         <p>Cada partícula de un fluido que circula por una conducción sigue una trayectoria: su <b>línea de corriente</b>
         (o línea de flujo). El conjunto de líneas de corriente que rodean una pequeña superficie forma un <b>tubo de flujo</b>.</p>
@@ -22,6 +24,7 @@ registrarUD({
     },
     {
       titulo: "2. Experiencia de Reynolds y número de Reynolds",
+      apuntes: "Apuntes UD5, apartado 2 (págs. 2–4)",
       html: `
         <p><b>Experiencia de Reynolds (1883)</b>: se inyecta colorante en agua que circula por un tubo de vidrio y se va abriendo
         la válvula. A baja velocidad el colorante forma un hilo fino (laminar); al superar una <b>velocidad crítica</b>
@@ -57,6 +60,7 @@ registrarUD({
     },
     {
       titulo: "3. Ecuación de Bernoulli generalizada",
+      apuntes: "Apuntes UD5, apartado 3 (pág. 5)",
       html: `
         <p>Es el balance de energía mecánica entre dos secciones, añadiendo la energía que aporta una bomba (w) y la que se pierde
         por rozamiento (h<sub>f</sub>). Todos los términos en <b>metros de columna de fluido</b>:</p>
@@ -74,6 +78,7 @@ registrarUD({
     },
     {
       titulo: "4. Pérdidas de carga. Ecuación de Darcy",
+      apuntes: "Apuntes UD5, apartado 4 y 4.1 (pág. 6)",
       html: `
         <p>El rozamiento convierte energía mecánica en calor y se traduce en una <b>caída de presión</b>. Tipos:</p>
         <ul>
@@ -92,6 +97,7 @@ registrarUD({
     },
     {
       titulo: "5. Régimen turbulento: rugosidad y diagrama de Moody",
+      apuntes: "Apuntes UD5, apartado 4.2 (págs. 7–8)",
       html: `
         <p>No hay modelo teórico: el factor de fricción se obtiene de datos experimentales y depende de dos números adimensionales:</p>
         <div class="formula">4f = f(Re, ε/D)</div>
@@ -123,6 +129,7 @@ registrarUD({
     },
     {
       titulo: "6. Pérdidas secundarias: longitud equivalente",
+      apuntes: "Apuntes UD5, apartado 5 (págs. 9–10)",
       html: `
         <p>Cada accesorio (válvula, codo, te, entrada desde depósito, estrechamiento o ensanchamiento…) se sustituye por la
         <b>longitud de tubería recta del mismo diámetro</b> que produciría la misma pérdida: su <b>longitud equivalente</b> L<sub>eq</sub>
@@ -133,6 +140,7 @@ registrarUD({
     },
     {
       titulo: "7. Método para resolver problemas",
+      apuntes: "Relación de ejercicios de la UD5 (problemas resueltos)",
       html: `
         <ol>
           <li>Pasa todos los datos al SI (cP, St, g/cm³, pulgadas, L/min…).</li>
@@ -148,6 +156,7 @@ registrarUD({
     },
     {
       titulo: "8. Formulario",
+      apuntes: "Resumen de las fórmulas de todos los apartados de los apuntes UD5",
       html: `
         <table class="tabla">
           <tr><td>Velocidad media</td><td>v = Q/A = 4Q/(πD²)</td></tr>
