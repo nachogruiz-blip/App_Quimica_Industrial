@@ -10,6 +10,9 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 
 El progreso se guarda en el navegador (localStorage).
 
+## Documentación
+Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [`docs/ESTADO.md`](docs/ESTADO.md).
+
 ## Estructura
 ```
 index.html          carga los datos y la app
