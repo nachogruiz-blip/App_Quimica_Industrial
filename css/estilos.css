@@ -1,0 +1,24 @@
+:root{--bg:#f7f8fa;--card:#fff;--txt:#1d2433;--sub:#5b6478;--borde:#dde1e8;--acento:#0f766e;--ok:#15803d;--ko:#b91c1c;--okbg:#e8f6ec;--kobg:#fbeaea}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1b1f29;--txt:#e6e9ef;--sub:#9aa3b5;--borde:#2c3242;--acento:#2dd4bf;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1b1f29;--txt:#e6e9ef;--sub:#9aa3b5;--borde:#2c3242;--acento:#2dd4bf;--ok:#4ade80;--ko:#f87171;--okbg:#14301f;--kobg:#3a1717}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+.barra{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--borde);background:var(--card);position:sticky;top:0}
+.logo{font-weight:700;color:var(--txt);text-decoration:none}
+main{max-width:760px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--borde);border-radius:12px;padding:16px;margin:12px 0}
+a.card{display:block;color:inherit;text-decoration:none}a.card:hover{border-color:var(--acento)}
+.sub{color:var(--sub);font-size:.9rem}
+.barra-prog{height:6px;background:var(--borde);border-radius:3px;overflow:hidden;margin-top:8px}.barra-prog>div{height:100%;background:var(--acento)}
+.pestanas{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+button,.btn{font:inherit;padding:10px 14px;border-radius:8px;border:1px solid var(--borde);background:var(--card);color:var(--txt);cursor:pointer}
+.btn-prim{background:var(--acento);color:#fff;border-color:var(--acento)}
+.activa{border-color:var(--acento);color:var(--acento);font-weight:600}
+.btn-icono{padding:6px 10px}
+.opcion{display:block;width:100%;text-align:left;margin:6px 0}
+.opcion.ok{background:var(--okbg);border-color:var(--ok)}.opcion.ko{background:var(--kobg);border-color:var(--ko)}
+.feedback{margin-top:12px;padding:12px;border-radius:8px}.feedback.ok{background:var(--okbg)}.feedback.ko{background:var(--kobg)}
+.formula{font-family:"Cambria Math",Georgia,serif;font-size:1.15rem;text-align:center;padding:10px;margin:10px 0;background:var(--bg);border-radius:8px}
+.clave{border-left:4px solid var(--acento);padding-left:10px}
+input[type=text]{font:inherit;padding:10px;border-radius:8px;border:1px solid var(--borde);background:var(--bg);color:var(--txt);width:12em;max-width:100%}
+details summary{cursor:pointer;font-weight:600}
