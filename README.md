@@ -13,7 +13,8 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 
 ## Uso
 - Local: abre `index.html` en el navegador.
-- Online: *Settings → Pages → Deploy from branch → main / (root)*.
+- Online con acceso solo para personas autorizadas: Cloudflare Pages + Cloudflare Access, ver
+  [`docs/despliegue_cloudflare.md`](docs/despliegue_cloudflare.md).
 
 Al entrar se crea un usuario con contraseña (o se entra como invitado). Los usuarios y el progreso se guardan solo en ese
 navegador (localStorage): se mantienen al cerrarlo, pero se pierden si se borran los datos de navegación. Para pasar el
@@ -25,6 +26,7 @@ Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [
 ## Estructura
 ```
 index.html          carga los datos y la app
+_headers            cabeceras de seguridad para Cloudflare Pages
 css/estilos.css     estilos (claro/oscuro)
 js/app.js           motor: guía, práctica, examen, fallos, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
