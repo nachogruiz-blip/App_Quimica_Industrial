@@ -28,7 +28,8 @@ js/app.js           motor: guía, práctica, examen, fallos, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
 datos/registro.js   módulos y registro de unidades
 datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
-tests/comprobar.js  comprobación automática (node tests/comprobar.js)
+tests/comprobar.js  comprobación automática: errores y seguridad (node tests/comprobar.js)
+tests/derechos.js   busca copias literales de los PDFs (node tests/derechos.js)
 docs/               documentación del proyecto (estado, formato, flujo, derechos)
 materiales/         PDFs originales — ignorado por git, NO se sube
 ```

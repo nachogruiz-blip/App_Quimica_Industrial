@@ -15,6 +15,9 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 - [x] **TSF UD5 Flujo de fluidos** (`datos/tsf_ud5.js`): 8 secciones de guía, 40 preguntas (17 test, 8 V/F, 15 numéricas).
 - [x] Comprobación automática `node tests/comprobar.js`.
 - [x] Documentación para agentes (`CLAUDE.md`, `AGENTS.md`, `docs/`).
+- [x] Revisión de errores, seguridad y derechos (2026-11-19): corregido el lector de respuestas numéricas (antes «45.000»
+  se leía como 45 aunque la app muestra así las soluciones); `tests/comprobar.js` revisa seguridad; nuevo `tests/derechos.js`
+  (0 copias ≥ 12 palabras en TSF UD5). Sección «Revisiones obligatorias» en `CLAUDE.md`.
 
 ## Pendiente (en orden)
 1. [ ] **El usuario revisa TSF UD5** → aplicar sus correcciones y anotar las preferencias en «Decisiones».
@@ -23,6 +26,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 4. [ ] TSF UD4 Dinámica de fluidos: solo hay ejercicios; la guía se redacta a partir de ellos (continuidad, Bernoulli). Confirmar con el usuario si quiere teoría.
 5. [ ] Resto de material disponible (ver inventario): TSF UD3, UD6; FPM disoluciones/valoraciones.
 6. [ ] Activar GitHub Pages (Settings → Pages → main / root) — lo hace el usuario.
+7. [ ] (Propuesta, preguntar al usuario) Exportar/importar el progreso en un archivo `.json` para pasarlo de un dispositivo a otro.
+8. [ ] (Menor) Pulsar la pestaña activa (p. ej. «Practicar» estando en Practicar) no reinicia la ronda, porque el hash no cambia.
 
 ## Inventario de materiales (repo privado `App_Quimica_Industrial_materials`)
 | Archivo | Módulo | Contenido | Usado en |

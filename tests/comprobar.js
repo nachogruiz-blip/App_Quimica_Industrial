@@ -35,8 +35,27 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
         }
       }
     }
+    // Lectura de respuestas numéricas (coma decimal, punto de miles como lo muestra fmt)
+    const casos = [["45.000", 45000], ["45000", 45000], ["1.234,5", 1234.5], ["0,025", 0.025], ["0.025", 0.025], ["-3,5", -3.5], ["2e-3", 0.002], ["1.500", 1.5]];
+    for (const [txt, val] of casos) if (!leerNumero(txt).some(x => Math.abs(x - val) < 1e-12)) mal.push(`leerNumero("${txt}") no da ${val}`);
+    for (const txt of ["", "abc", "12abc"]) if (leerNumero(txt).length) mal.push(`leerNumero("${txt}") debería rechazarse`);
     return mal;
   });
+
+  // Seguridad: sin PDFs en git, sin recursos externos ni código dinámico (la app es estática y pública).
+  const fs = require("fs"), { execSync } = require("child_process");
+  const raiz = path.resolve(__dirname, "..");
+  try {
+    const rastreados = execSync("git ls-files", { cwd: raiz }).toString().split("\n");
+    for (const f of rastreados) if (/\.(pdf|docx?|pptx?|odt)$/i.test(f) || f.startsWith("materiales/")) problemas.push(`seguridad: material original en git: ${f}`);
+  } catch { /* sin git: se omite */ }
+  const fuentes = ["index.html", ...["js", "datos", "css"].flatMap(d => fs.readdirSync(path.join(raiz, d)).map(f => `${d}/${f}`))];
+  for (const f of fuentes) {
+    const txt = fs.readFileSync(path.join(raiz, f), "utf8");
+    if (/<(script|link|img|iframe)[^>]+(src|href)=["']?(https?:)?\/\//i.test(txt)) problemas.push(`seguridad: ${f} carga un recurso externo`);
+    if (/\beval\(|new Function\(|document\.write\(/.test(txt)) problemas.push(`seguridad: ${f} usa eval/Function/document.write`);
+    if (/(api[_-]?key|token|password|secret)\s*[:=]\s*["'][^"']{8,}/i.test(txt)) problemas.push(`seguridad: ${f} parece contener una credencial`);
+  }
 
   const resumen = [];
   const uds = await p.evaluate(() => UNIDADES.map(u => [u.id, u.preguntas.length]));

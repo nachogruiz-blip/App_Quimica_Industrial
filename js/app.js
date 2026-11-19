@@ -65,6 +65,14 @@ function prepararNumerica(q) {
   }
   return v;
 }
+// Lee la respuesta del usuario. Acepta coma decimal y punto de miles («45.000», «1.234,5»), que es como fmt() muestra
+// las soluciones. «1.500» es ambiguo (1500 o 1,5): devuelve ambas lecturas y vale si cualquiera es correcta.
+function leerNumero(txt) {
+  const s = txt.replace(/\s/g, "");
+  const lecturas = s.includes(",") ? [s.replace(/\./g, "").replace(",", ".")]
+    : /^[-+]?\d{1,3}(\.\d{3})+$/.test(s) ? [s.replace(/\./g, ""), s] : [s];
+  return lecturas.map(t => /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? parseFloat(t) : NaN).filter(isFinite);
+}
 function sustituir(txt, v) { return txt.replace(/\{(\w+)\}/g, (_, k) => k in v ? fmt(v[k]) : `{${k}}`); }
 
 function mostrarPregunta(s) {
@@ -99,9 +107,9 @@ function mostrarPregunta(s) {
   if (q.tipo === "numerica") {
     document.getElementById("f-num").onsubmit = e => {
       e.preventDefault();
-      const x = parseFloat(document.getElementById("resp").value.replace(/\s/g, "").replace(",", "."));
       const sol = q.resolver(v);
-      const ok = isFinite(x) && Math.abs(x - sol) <= Math.max(Math.abs(sol) * (q.tolerancia ?? 0.02), q.toleranciaAbs ?? 0);
+      const tol = Math.max(Math.abs(sol) * (q.tolerancia ?? 0.02), q.toleranciaAbs ?? 0);
+      const ok = leerNumero(document.getElementById("resp").value).some(x => Math.abs(x - sol) <= tol);
       e.target.querySelectorAll("input,button").forEach(el => el.disabled = true);
       responder(ok, ok ? "" : ` — solución: ${fmt(sol)} ${q.unidad || ""}`);
     };
