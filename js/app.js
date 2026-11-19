@@ -3,7 +3,6 @@
 const $app = document.getElementById("app");
 const CLAVE = "qi-progreso-v1";
 
-function fmt(x) { return Number(x.toPrecision(4)).toLocaleString("es-ES"); }
 function cargar() { try { return JSON.parse(localStorage.getItem(CLAVE)) || {}; } catch { return {}; } }
 function guardar(p) { try { localStorage.setItem(CLAVE, JSON.stringify(p)); } catch {} }
 function anotar(qid, acierto) {
@@ -19,18 +18,24 @@ function dominio(ud) {
 
 // ---------- Vistas ----------
 function vistaInicio() {
-  $app.innerHTML = `<h1>Unidades</h1>` + UNIDADES.map(u => `
+  const tarjeta = u => `
     <a class="card" href="#/ud/${u.id}/guia">
       <b>${u.codigo} · ${u.titulo}</b><div class="sub">${u.descripcion || ""} · ${u.preguntas.length} preguntas</div>
       <div class="barra-prog"><div style="width:${Math.round(dominio(u) * 100)}%"></div></div>
-    </a>`).join("") +
+    </a>`;
+  $app.innerHTML = MODULOS.map(m => {
+    const uds = UNIDADES.filter(u => u.modulo === m.id);
+    return `<h2>${m.nombre}${m.codigo ? ` <span class="sub">(${m.codigo})</span>` : ""}</h2>` +
+      (uds.length ? uds.map(tarjeta).join("") : `<p class="sub">Próximamente.</p>`);
+  }).join("") +
     `<p class="sub">El progreso se guarda en este navegador. <button id="reset">Borrar progreso</button></p>`;
   document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo el progreso?")) { guardar({}); vistaInicio(); } };
 }
 
 function cabeceraUD(ud, activa) {
   const t = [["guia", "📖 Guía"], ["practicar", "✍️ Practicar"], ["examen", "⏱️ Examen"], ["fallos", "🔁 Fallos"]];
-  return `<p class="sub"><a href="#/">← Unidades</a></p><h1>${ud.codigo} · ${ud.titulo}</h1>
+  const m = MODULOS.find(x => x.id === ud.modulo);
+  return `<p class="sub"><a href="#/">← Inicio</a>${m ? " · " + m.nombre : ""}</p><h1>${ud.codigo} · ${ud.titulo}</h1>
     <nav class="pestanas">${t.map(([k, n]) => `<a class="btn ${k === activa ? "activa" : ""}" href="#/ud/${ud.id}/${k}">${n}</a>`).join("")}</nav>`;
 }
 
@@ -65,6 +70,7 @@ function sustituir(txt, v) { return txt.replace(/\{(\w+)\}/g, (_, k) => k in v ?
 function mostrarPregunta(s) {
   const q = s.lista[s.i]; const examen = s.modo === "examen";
   const v = q.tipo === "numerica" ? prepararNumerica(q) : null;
+  window.__actual = { q, v }; // usado por tests/comprobar.js
   let cuerpo = "";
   if (q.tipo === "test") {
     const orden = barajar(q.opciones.map((_, k) => k));
@@ -95,7 +101,7 @@ function mostrarPregunta(s) {
       e.preventDefault();
       const x = parseFloat(document.getElementById("resp").value.replace(/\s/g, "").replace(",", "."));
       const sol = q.resolver(v);
-      const ok = isFinite(x) && Math.abs(x - sol) <= Math.abs(sol) * (q.tolerancia ?? 0.02);
+      const ok = isFinite(x) && Math.abs(x - sol) <= Math.max(Math.abs(sol) * (q.tolerancia ?? 0.02), q.toleranciaAbs ?? 0);
       e.target.querySelectorAll("input,button").forEach(el => el.disabled = true);
       responder(ok, ok ? "" : ` — solución: ${fmt(sol)} ${q.unidad || ""}`);
     };

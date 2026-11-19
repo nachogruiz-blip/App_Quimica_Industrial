@@ -10,9 +10,11 @@ App web estática de estudio para Química Industrial (FP Grado Superior). Docum
 
 ## Reglas
 - Sin dependencias ni build: HTML + CSS + JS puro; debe funcionar abriendo `index.html` (file://).
-- Contenido en `datos/udN.js` con `registrarUD({...})`. Ejemplo de referencia: `datos/ud_demo.js`.
-- IDs de pregunta estables (`ud4-12`): nunca renumerar, el progreso del usuario se guarda por ID.
+- Contenido en `datos/<modulo>_udN.js` con `registrarUD({...})`. Ejemplo de referencia: `datos/tsf_ud5.js`.
+- PDFs fuente: repo privado `App_Quimica_Industrial_materials` (ver `docs/flujo_trabajo.md`).
+- Seguir la notación de los apuntes de clase (ver «Decisiones» en `docs/ESTADO.md`).
+- IDs de pregunta estables (`tsf5-12`, `tsf5-n3`): nunca renumerar, el progreso del usuario se guarda por ID.
 - **Nunca** subir PDFs ni copiar texto/tablas/figuras literales de los materiales.
 - Cada pregunta lleva explicación; las numéricas, el desarrollo con los valores concretos.
-- Tras cambios, probar con Playwright (chromium headless): sin errores de consola, numéricas autoconsistentes.
+- Tras cambios: `node tests/comprobar.js` debe terminar en «✅ Todo correcto».
 - Commits en español, push a `main`.

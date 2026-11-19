@@ -1,14 +1,15 @@
 # Flujo de trabajo: de un PDF a una unidad
 
-1. **Obtener el PDF.** Los PDFs NO están en este repo (ver `docs/derechos_autor.md`). Se colocan en
-   `materiales/` (ignorado por git), sea subidos por el usuario al chat o clonados del repo privado de materiales
-   si existe (ver ese documento).
-2. **Extraer texto**: `pdftotext -layout materiales/UD4.pdf -` (o `pypdf`). Si está escaneado, OCR
-   (`ocrmypdf` / `tesseract -l spa`) y revisar fórmulas a mano.
-3. **Planificar**: listar apartados del PDF → secciones de la guía; anotar fórmulas, definiciones y tipos de problema.
-4. **Redactar `datos/udN.js`** con palabras propias (nada literal), siguiendo `docs/formato_datos.md`.
-5. **Probar** con Playwright (Chromium ya instalado en el entorno de Claude Code):
-   abrir `file://…/index.html#/ud/udN/practicar`, responder todas las preguntas y comprobar que no hay
-   errores de consola y que las numéricas aceptan su propia solución.
-6. **Actualizar `docs/ESTADO.md`** (tabla de unidades y pendientes) y hacer commit + push a `main`.
-7. Pedir al usuario que revise la unidad y anotar sus correcciones de estilo en `docs/ESTADO.md` → «Decisiones».
+1. **Obtener los PDFs** del repo privado `App_Quimica_Industrial_materials` (en Claude Code:
+   `add_repo` y clonar en `/home/user/app_quimica_industrial_materials`). Nunca copiarlos a este repo.
+2. **Extraer texto**: `pdftotext -layout "archivo.pdf" -`. Las tablas, diagramas y figuras suelen ser imágenes:
+   renderiza las páginas (`pdftoppm -r 110 -f N -l N -png archivo.pdf salida`) y míralas.
+   Si `pdftotext` devuelve casi nada, el PDF es escaneado o de imágenes: léelo renderizado.
+3. **Planificar**: apartados del PDF → secciones de la guía; fórmulas; tipos de problema de la relación de ejercicios.
+4. **Verificar fórmulas**: reproduce en node 3–4 soluciones de la relación de ejercicios con las funciones de
+   `js/utilidades.js` antes de escribir preguntas numéricas. Anota discrepancias en `docs/ESTADO.md`.
+5. **Redactar `datos/<modulo>_udN.js`** con palabras propias, siguiendo `docs/formato_datos.md`, y añadir el `<script>` en `index.html`.
+6. **Comprobar**: `node tests/comprobar.js` (valida formato, muestrea numéricas y responde todas en Chromium).
+   Opcional: captura en móvil (390×844) para revisar el aspecto.
+7. **Actualizar `docs/ESTADO.md`** (hecho, pendiente, inventario, tabla de unidades) y commit + push a `main`.
+8. Pedir al usuario que revise la unidad; sus preferencias van a «Decisiones» de `docs/ESTADO.md`.
