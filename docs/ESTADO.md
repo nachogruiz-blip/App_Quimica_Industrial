@@ -30,7 +30,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 3. [ ] MEI UD4 Máquinas eléctricas (44 págs.) + ejercicios de teoría de circuitos.
 4. [ ] TSF UD4 Dinámica de fluidos: solo hay ejercicios; la guía se redacta a partir de ellos (continuidad, Bernoulli). Confirmar con el usuario si quiere teoría.
 5. [ ] Resto de material disponible (ver inventario): TSF UD3, UD6; FPM disoluciones/valoraciones.
-6. [ ] Publicar con acceso controlado: Cloudflare Workers + Access y luego repo privado. Publicada en workers.dev (2026-11-19); falta Access, cambiar el subdominio y el repo privado, siguiendo `docs/despliegue_cloudflare.md`.
+6. [ ] Publicar con acceso controlado: Cloudflare Workers con contraseña y luego repo privado. Publicada en workers.dev (2026-11-19). Acceso con `worker.mjs` (usuario/contraseña, secreto `USUARIOS`): falta que el
+   usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
 7. [ ] (Menor) Pulsar la pestaña activa (p. ej. «Practicar» estando en Practicar) no reinicia la ronda, porque el hash no cambia.
 
@@ -53,7 +54,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | Decisión | Motivo |
 |---|---|
 | Web estática, sin build ni dependencias | Gratis, funciona en móvil y abriendo `index.html` |
-| Hosting: Cloudflare Pages + Cloudflare Access (no GitHub Pages) | Decidido por el usuario: controla quién entra (lista de correos) y deja el repo privado. Gratis hasta 50 usuarios |
+| Hosting: Cloudflare Workers con archivos estáticos (no GitHub Pages) | Decidido por el usuario: permite controlar quién entra y dejar el repo privado. Gratis |
+| Acceso: `worker.mjs` con HTTP Basic y secreto `USUARIOS`, no Cloudflare Access | Decidido por el usuario: Access pide tarjeta. Aceptar/denegar = editar el secreto |
 | Contenido en `.js`, no `.json` | `fetch` no funciona con `file://` |
 | PDFs en repo privado aparte; este repo público | Posibles derechos de autor (`docs/derechos_autor.md`) |
 | Progreso en `localStorage`, por usuario | Sin servidor; se pasa entre dispositivos exportando/importando un `.json` |

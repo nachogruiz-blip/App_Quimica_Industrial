@@ -11,3 +11,4 @@ tests
 .gitignore
 .assetsignore
 wrangler.jsonc
+worker.mjs

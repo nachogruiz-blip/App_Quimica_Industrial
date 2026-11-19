@@ -7,7 +7,7 @@ App web estática de estudio para Química Industrial (FP Grado Superior). Docum
 2. `docs/flujo_trabajo.md` — cómo convertir un PDF en una unidad.
 3. `docs/formato_datos.md` — esquema de guía y preguntas.
 4. `docs/derechos_autor.md` — dónde están los PDFs y qué se puede publicar.
-5. `docs/despliegue_cloudflare.md` — cómo se publica la app y quién puede entrar (Cloudflare Access).
+5. `docs/despliegue_cloudflare.md` — cómo se publica la app y quién puede entrar (usuario/contraseña en `worker.mjs`).
 
 ## Reglas
 - Sin dependencias ni build: HTML + CSS + JS puro; debe funcionar abriendo `index.html` (file://).
@@ -21,11 +21,12 @@ App web estática de estudio para Química Industrial (FP Grado Superior). Docum
 - Commits en español, push a `main` (si la sesión indica otra rama, usa esa y avisa al usuario).
 
 ## Revisiones obligatorias antes de cada commit
-Trata este repo como **público**: aunque pase a privado y la app se sirva tras Cloudflare Access
-(`docs/despliegue_cloudflare.md`), puede volver a abrirse. No actives GitHub Pages; no toques `_headers`, `.assetsignore` ni `wrangler.jsonc` sin motivo (deciden qué se publica).
+Trata este repo como **público**: aunque pase a privado y la app se sirva con contraseña
+(`docs/despliegue_cloudflare.md`), puede volver a abrirse. No actives GitHub Pages; no toques `_headers`, `.assetsignore`, `wrangler.jsonc` ni `worker.mjs` sin motivo (deciden qué
+se publica y quién entra). `worker.mjs` debe fallar cerrado: sin el secreto `USUARIOS` no entra nadie.
 
 **Errores**
-- `node tests/comprobar.js` → «✅ Todo correcto» (formato, numéricas, respuestas en Chromium, lector de números, seguridad).
+- `node tests/comprobar.js` → «✅ Todo correcto» (formato, numéricas, respuestas en Chromium, lector de números, login, control de acceso, seguridad).
 - Revisa a mano lo que el test no ve: que las explicaciones sean correctas y que los rangos de `variables` sean realistas.
 
 **Seguridad** (`tests/comprobar.js` comprueba lo automatizable)

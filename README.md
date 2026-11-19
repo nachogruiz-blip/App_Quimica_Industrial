@@ -13,7 +13,7 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 
 ## Uso
 - Local: abre `index.html` en el navegador.
-- Online con acceso solo para personas autorizadas: Cloudflare Pages + Cloudflare Access, ver
+- Online con acceso solo para personas autorizadas (usuario y contraseña): Cloudflare Workers, ver
   [`docs/despliegue_cloudflare.md`](docs/despliegue_cloudflare.md).
 
 Al entrar se crea un usuario con contraseña (o se entra como invitado). Los usuarios y el progreso se guardan solo en ese
@@ -27,6 +27,7 @@ Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [
 ```
 index.html          carga los datos y la app
 _headers            cabeceras de seguridad para Cloudflare
+worker.mjs          en Cloudflare, pide usuario y contraseña antes de servir la app (secreto USUARIOS)
 wrangler.jsonc      configuración de Cloudflare (Workers con archivos estáticos)
 .assetsignore       lo que NO se publica (docs, tests, .md, .git)
 css/estilos.css     estilos (claro/oscuro)

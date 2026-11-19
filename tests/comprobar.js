@@ -1,6 +1,7 @@
 // Comprobación automática de la app: node tests/comprobar.js
 // Requiere Playwright con Chromium (preinstalado en el entorno de Claude Code; si no: npm i -D playwright && npx playwright install chromium).
 // 1) Valida el formato de todas las preguntas y muestrea 200 veces cada numérica.
+// 3) Prueba el control de acceso de Cloudflare (worker.mjs).
 // 0) Prueba el login local (crear usuario, contraseña incorrecta, invitado, importar progreso).
 // 2) Responde en el navegador todas las preguntas de cada UD con la solución correcta y exige 100 % de aciertos.
 const path = require("path");
@@ -108,6 +109,15 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
   await p.goto(URL);
 
   await navegador.close();
+
+  // Control de acceso en Cloudflare (worker.mjs): sin usuarios → 503; sin clave o clave mala → 401; clave buena → la app.
+  const w = await import("file://" + path.resolve(__dirname, "..", "worker.mjs"));
+  const pedir = async (usuarios, cred) => (await w.default.fetch(new Request("https://x/", { headers: cred ?
+    { Authorization: "Basic " + Buffer.from(cred).toString("base64") } : {} }), { USUARIOS: usuarios, ASSETS: { fetch: async () => new Response("app") } })).status;
+  const casosW = [["", "ana:x", 503], ["ana:clave-1", null, 401], ["ana:clave-1", "ana:mala", 401], ["ana:clave-1", "pepe:clave-1", 401],
+    ["ana:clave-1", "ana:clave-1", 200], ["ana:a:b ñ, Luis:z", "LUIS:z", 200], ["ana:a:b ñ, Luis:z", "ana:a:b ñ", 200]];
+  for (const [u, c, esperado] of casosW) { const r = await pedir(u, c); if (r !== esperado) problemas.push(`acceso: USUARIOS=«${u}» y ${c} da ${r}, se esperaba ${esperado}`); }
+  for (const f of ["worker.mjs", "docs", "tests", "*.md", ".git"]) if (!fs.readFileSync(path.join(raiz, ".assetsignore"), "utf8").split("\n").includes(f)) problemas.push(`seguridad: .assetsignore no excluye ${f}`);
   console.log(resumen.join("\n"));
   const todo = [...problemas, ...errores.map(e => "consola: " + e)];
   if (todo.length) { console.error("❌ Problemas:\n" + todo.join("\n")); process.exit(1); }

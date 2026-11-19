@@ -1,9 +1,11 @@
-// Configuración de Cloudflare (Workers con archivos estáticos). Ver docs/despliegue_cloudflare.md.
+// Configuración de Cloudflare (Worker + archivos estáticos). Ver docs/despliegue_cloudflare.md.
 {
   "name": "app-quimica-industrial",
   "compatibility_date": "2026-11-18",
-  "assets": { "directory": "." },
+  // worker.mjs pide usuario y contraseña (secreto USUARIOS) antes de servir cualquier archivo.
+  "main": "worker.mjs",
+  "assets": { "directory": ".", "binding": "ASSETS", "run_worker_first": true },
   "workers_dev": true,
-  // Sin URLs de vista previa: así solo hay una dirección que proteger con Cloudflare Access.
+  // Sin URLs de vista previa: así solo hay una dirección que proteger.
   "preview_urls": false
 }
