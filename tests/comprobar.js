@@ -178,6 +178,15 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
     const barra = await q.textContent("#usuario-barra");
     if (!barra.includes("Nacho") || (await q.$("#salir"))) problemas.push("modo Cloudflare: la barra debe mostrar el usuario y no «Salir»");
     if (!(await q.$("#novedades"))) problemas.push("modo Cloudflare: no salen las novedades al entrar");
+    // Instalar como app: manifest enlazado (solo en http) con iconos que existen
+    if (!(await q.$('link[rel="manifest"]'))) problemas.push("instalar: en Cloudflare falta el enlace al manifest");
+    try {
+      const man = JSON.parse(fs2.readFileSync(path.join(__dirname, "..", "manifest.webmanifest"), "utf8"));
+      for (const t of ["192x192", "512x512"]) if (!man.icons.some(i => i.sizes === t)) problemas.push(`instalar: falta icono ${t}`);
+      for (const i of man.icons) if (!fs2.existsSync(path.join(__dirname, "..", i.src))) problemas.push(`instalar: no existe ${i.src}`);
+      for (const i of man.icons) if (!(await import("file://" + path.resolve(__dirname, "..", "worker.mjs"))).PUBLICOS.has("/" + i.src)) problemas.push(`instalar: ${i.src} no está en PUBLICOS de worker.mjs`);
+      if (!man.name || !man.start_url || man.display !== "standalone") problemas.push("instalar: manifest incompleto");
+    } catch (e) { problemas.push("instalar: manifest.webmanifest no es JSON válido: " + e.message); }
     await c.close();
   }
   await navegador.close();
@@ -188,6 +197,13 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
     { Authorization: "Basic " + Buffer.from(cred).toString("base64") } : {} }), { USUARIOS: usuarios, ASSETS: { fetch: async () => new Response("app") } })).status;
   const casosW = [["", "ana:x", 503], ["ana:clave-1", null, 401], ["ana:clave-1", "ana:mala", 401], ["ana:clave-1", "pepe:clave-1", 401],
     ["ana:clave-1", "ana:clave-1", 200], ["ana:a:b ñ, Luis:z", "LUIS:z", 200], ["ana:a:b ñ, Luis:z", "ana:a:b ñ", 200]];
+  const pedirRuta = async (usuarios, ruta, metodo = "GET") => (await w.default.fetch(new Request("https://x" + ruta, { method: metodo }),
+    { USUARIOS: usuarios, ASSETS: { fetch: async () => new Response("x") } })).status;
+  for (const [u, ruta, metodo, esperado] of [["ana:1", "/manifest.webmanifest", "GET", 200], ["ana:1", "/iconos/icono-192.png", "GET", 200],
+    ["ana:1", "/iconos/../index.html", "GET", 401], ["ana:1", "/iconos/", "GET", 401], ["ana:1", "/datos/tsf_ud5.js", "GET", 401],
+    ["ana:1", "/manifest.webmanifest", "POST", 401], ["", "/manifest.webmanifest", "GET", 503]]) {
+    const r = await pedirRuta(u, ruta, metodo); if (r !== esperado) problemas.push(`acceso: ${metodo} ${ruta} sin contraseña da ${r}, se esperaba ${esperado}`);
+  }
   for (const [u, c, esperado] of casosW) { const r = await pedir(u, c); if (r !== esperado) problemas.push(`acceso: USUARIOS=«${u}» y ${c} da ${r}, se esperaba ${esperado}`); }
   for (const f of ["worker.mjs", "docs", "tests", "*.md", ".git"]) if (!fs.readFileSync(path.join(raiz, ".assetsignore"), "utf8").split("\n").includes(f)) problemas.push(`seguridad: .assetsignore no excluye ${f}`);
   console.log(resumen.join("\n"));

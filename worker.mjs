@@ -17,6 +17,11 @@ const SEGURIDAD = {
   "Cache-Control": "private, no-store"
 };
 
+// Lo único que se sirve sin contraseña: el manifest y los iconos para instalar la app en el móvil (Android los descarga
+// sin las credenciales del usuario). No contienen nada del contenido de la app. Rutas exactas, no prefijos.
+export const PUBLICOS = new Set(["/manifest.webmanifest", "/iconos/icono.svg", "/iconos/icono-180.png", "/iconos/icono-192.png",
+  "/iconos/icono-512.png", "/iconos/icono-maskable-512.png", "/favicon.ico"]);
+
 /** Lee el secreto USUARIOS → Map(usuario en minúsculas → { nombre, clave }). La contraseña puede contener «:», pero no comas. */
 export function leerUsuarios(texto) {
   const m = new Map();
@@ -64,6 +69,9 @@ export default {
     const usuarios = leerUsuarios(env.USUARIOS);
     if (!usuarios.size) return conCabeceras(new Response("Acceso cerrado: no hay usuarios autorizados configurados.",
       { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } }));
+
+    if (PUBLICOS.has(new URL(peticion.url).pathname) && ["GET", "HEAD"].includes(peticion.method))
+      return conCabeceras(await env.ASSETS.fetch(peticion), { "Cache-Control": "public, max-age=86400" });
 
     const cred = leerCredenciales(peticion.headers.get("Authorization"));
     const cuenta = cred && usuarios.get(cred[0]), esperada = cuenta?.clave;

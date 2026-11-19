@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-19-4",
+    titulo: "Instala la app en tu móvil",
+    puntos: [
+      "Puedes tenerla con su propio icono en la pantalla de inicio y abrirla a pantalla completa.",
+      "Cómo hacerlo: Ajustes → «Instalar como app».",
+      "Necesita internet; la primera vez que la abras te pedirá tu usuario y contraseña."
+    ]
+  },
+  {
     id: "2026-11-19-3",
     titulo: "Nuevo menú: Estudio, Examen, Test y Ajustes",
     puntos: [

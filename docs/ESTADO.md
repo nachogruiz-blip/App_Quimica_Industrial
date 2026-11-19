@@ -41,8 +41,10 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
    usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
 7. [x] Pulsar la pestaña activa vuelve a cargar la sección (resuelto con el nuevo menú).
-8. [ ] (Opcional) Instalable como app en el móvil (PWA): necesita `manifest.json` e icono; con `file://` el manifest da
-   error de consola, así que habría que cargarlo solo en Cloudflare. Preguntar al usuario.
+8. [x] Instalable como app (PWA): `manifest.webmanifest` + `iconos/` (dibujo propio `icono.svg`; los PNG se generan
+   renderizándolo con Playwright). El manifest se enlaza desde `js/app.js` solo en http(s). `worker.mjs` sirve sin
+   contraseña solo esas rutas exactas (`PUBLICOS`). Ajustes → «Instalar como app» (botón en Chrome/Android e instrucciones).
+   Sin service worker: no funciona sin conexión (decisión pendiente si el usuario lo pide).
 
 ## Inventario de materiales (repo privado `App_Quimica_Industrial_materials`)
 | Archivo | Módulo | Contenido | Usado en |

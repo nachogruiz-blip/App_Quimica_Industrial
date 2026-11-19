@@ -295,10 +295,13 @@ function vistaAjustes() {
       <div class="pestanas"><button id="exportar">⬇️ Exportar progreso</button><label class="btn">⬆️ Importar progreso
       <input type="file" id="importar" accept=".json,application/json" hidden></label><button id="reset" class="peligro">🗑️ Borrar progreso</button></div>
       <p class="sub" id="msg-progreso" aria-live="polite"></p></section>
+    <section class="card"><h2>📲 Instalar como app</h2>${bloqueInstalar()}</section>
     <section class="card"><h2>🆕 Novedades</h2><a href="#/novedades">Ver todas las novedades de la app</a></section>`;
   document.getElementById("aj-nombre").textContent = u.nombre;
   const salir = document.getElementById("aj-salir");
   if (salir) salir.onclick = () => { cerrarSesion(); location.hash = "#/"; router(); };
+  const inst = document.getElementById("instalar");
+  if (inst) inst.onclick = async () => { const a = avisoInstalar; avisoInstalar = null; a.prompt(); await a.userChoice.catch(() => {}); vistaAjustes(); };
   $app.querySelectorAll("input[name=tema]").forEach(r => r.onchange = () => aplicarTema(r.value));
   const msg = document.getElementById("msg-progreso");
   document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo tu progreso? No se puede deshacer.")) { guardar({}); vistaAjustes(); } };
@@ -435,6 +438,25 @@ function mostrarNovedades(forzar) {
 function vistaNovedades() {
   $app.innerHTML = migas([["#/ajustes", "Ajustes"]]) + `<h1>🆕 Novedades</h1><div class="card" id="todas-novedades"></div>`;
   document.getElementById("todas-novedades").append(listaNovedades(window.NOVEDADES || []));
+}
+
+// ---------- Instalar como app (PWA) ----------
+// El manifest solo se enlaza servido por http(s) (Cloudflare); abriendo index.html como archivo daría error.
+if (/^https?:$/.test(location.protocol)) {
+  const l = document.createElement("link"); l.rel = "manifest"; l.href = "manifest.webmanifest"; document.head.append(l);
+}
+let avisoInstalar = null; // evento de Chrome/Android para mostrar el diálogo de instalación
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); avisoInstalar = e; });
+window.addEventListener("appinstalled", () => { avisoInstalar = null; });
+const instalada = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+function bloqueInstalar() {
+  if (instalada()) return `<p>✅ Estás usando la app instalada.</p>`;
+  if (!/^https?:$/.test(location.protocol)) return `<p class="sub">Para instalarla, ábrela desde su dirección web (no como archivo).</p>`;
+  return `${avisoInstalar ? `<button class="btn-prim" id="instalar">📲 Instalar en este dispositivo</button>` : ""}
+    <p class="sub">Queda un icono en la pantalla de inicio y se abre a pantalla completa, sin barra del navegador.</p>
+    <ul class="sub"><li><b>Android (Chrome):</b> menú ⋮ → «Instalar aplicación» o «Añadir a pantalla de inicio».</li>
+    <li><b>iPhone (Safari):</b> botón Compartir → «Añadir a pantalla de inicio».</li>
+    <li><b>Ordenador (Chrome/Edge):</b> icono de instalar a la derecha de la barra de direcciones.</li></ul>`;
 }
 
 aplicarTema(temaGuardado());

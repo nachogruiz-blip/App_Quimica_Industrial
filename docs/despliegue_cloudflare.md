@@ -21,7 +21,7 @@ Cloudflare ejecuta `npx wrangler deploy` en cada push a `main`. La configuració
 - `worker.mjs`: pide usuario y contraseña antes de servir nada (ver paso 3).
 - `wrangler.jsonc`: nombre `app-quimica-industrial`, ejecuta `worker.mjs` antes que los archivos, sirve la carpeta raíz y **sin URLs de vista previa**
   (`preview_urls: false`), para que solo haya una dirección que proteger.
-- `.assetsignore`: solo se publican `index.html`, `css/`, `js/` y `datos/`. Ni `docs/`, ni `tests/`, ni `*.md`, ni `.git`.
+- `.assetsignore`: solo se publican `index.html`, `manifest.webmanifest`, `css/`, `js/`, `datos/` e `iconos/`. Ni `docs/`, ni `tests/`, ni `*.md`, ni `.git`.
 - `_headers`: cabeceras de seguridad (CSP, etc.).
 
 Dirección: `https://app-quimica-industrial.<subdominio>.workers.dev`.
@@ -50,6 +50,9 @@ Basic sobre HTTPS) y los compara con el secreto `USUARIOS`. Sin `USUARIOS`, nadi
 | **Aceptar** a alguien | Edita el secreto `USUARIOS` y añade su línea; pásale su usuario y contraseña por un canal privado |
 | **Denegar o quitar** el acceso | Borra su línea del secreto. Deja de entrar en cuanto se guarda |
 | Cambiar una contraseña | Edita su línea |
+
+**Sin contraseña** solo se sirven el manifest y los iconos (lista exacta `PUBLICOS` en `worker.mjs`): Android los descarga
+sin las credenciales del usuario para crear el icono de la app instalada. No contienen nada del contenido de estudio.
 
 Es la **única** pantalla de acceso: la app pregunta al worker (`/__usuario`) quién ha entrado y guarda el progreso con
 ese usuario, sin pedir otro login. Para «cerrar sesión» hay que cerrar el navegador (es como funciona HTTP Basic).

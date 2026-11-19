@@ -37,6 +37,8 @@ _headers            cabeceras de seguridad para Cloudflare
 worker.mjs          en Cloudflare, pide usuario y contraseña antes de servir la app (secreto USUARIOS)
 wrangler.jsonc      configuración de Cloudflare (Workers con archivos estáticos)
 .assetsignore       lo que NO se publica (docs, tests, .md, .git)
+manifest.webmanifest datos para instalar la app en el móvil (PWA)
+iconos/             icono de la app (SVG propio y PNG generados a partir de él)
 css/estilos.css     estilos (claro/oscuro)
 js/app.js           motor: menú (Estudio, Examen, Test, Ajustes), guía, rondas de preguntas, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)

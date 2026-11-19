@@ -1,4 +1,4 @@
-# Archivos que NO se publican en Cloudflare (solo se sirve la app: index.html, css/, js/, datos/)
+# Archivos que NO se publican en Cloudflare (solo se sirve la app: index.html, manifest.webmanifest, css/, js/, datos/, iconos/)
 .git
 .github
 .wrangler
