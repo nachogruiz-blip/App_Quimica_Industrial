@@ -9,12 +9,14 @@
 <body>
   <header class="barra">
     <a href="#/" class="logo">⚗️ Química Industrial</a>
-    <button id="tema-btn" class="btn-icono" title="Cambiar tema claro/oscuro">◐</button>
+    <span class="acciones"><span id="usuario-barra"></span>
+      <button id="tema-btn" class="btn-icono" title="Cambiar tema claro/oscuro">◐</button></span>
   </header>
   <main id="app"></main>
 
-  <!-- Orden: utilidades → registro → unidades → app. Para añadir una UD, crea datos/<modulo>_udN.js y añádelo aquí. -->
+  <!-- Orden: utilidades → usuarios → registro → unidades → app. Para añadir una UD, crea datos/<modulo>_udN.js y añádelo aquí. -->
   <script src="js/utilidades.js"></script>
+  <script src="js/usuarios.js"></script>
   <script src="datos/registro.js"></script>
   <script src="datos/tsf_ud5.js"></script>
   <script src="js/app.js"></script>

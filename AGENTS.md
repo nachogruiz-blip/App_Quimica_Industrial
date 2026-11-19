@@ -32,10 +32,12 @@ Este repo es **público** (GitHub Pages): todo lo que se sube lo puede ver cualq
   que venga del usuario, de la URL (`location.hash`) o de `localStorage` (escápalo o usa `textContent`).
 - Ningún secreto, token ni dato personal (nombre, correo, centro, notas) en el código, la documentación ni los commits.
 - El progreso solo vive en `localStorage` del navegador: no añadir servidores ni envío de datos sin preguntar al usuario.
+- Login (`js/usuarios.js`): las contraseñas nunca se guardan en claro (hash con sal); el nombre de usuario se pinta con
+  `textContent`. No presentar el login como protección del contenido: la app es pública. El test de login debe seguir pasando.
 
 **Derechos de autor**
 - `git ls-files` no debe contener PDFs ni `materiales/` (lo comprueba `tests/comprobar.js`).
-- `node tests/derechos.js` (necesita el repo de materiales clonado al lado y `pdftotext`) → «✅ Sin copias literales».
+- `node tests/derechos.js` (necesita el repo de materiales clonado al lado y `pdftotext`) → «✅ Sin copias literales ni términos privados» (también busca el centro y nombres listados en `CONTEXTO_PRIVADO.md` del repo privado).
   Los avisos ⚠️ de frases técnicas cortas son aceptables; los ❌ (≥ 12 palabras seguidas iguales) hay que redactarlos de nuevo.
 - No copiar enunciados, tablas, figuras ni capturas de los PDFs; no enlazar los PDFs ni el repo privado desde la app (`index.html`, `datos/`).
 - Si dudas de si algo se puede publicar, pregunta al usuario antes de hacer push.

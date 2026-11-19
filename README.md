@@ -15,7 +15,9 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 - Local: abre `index.html` en el navegador.
 - Online: *Settings → Pages → Deploy from branch → main / (root)*.
 
-El progreso se guarda en el navegador (localStorage).
+Al entrar se crea un usuario con contraseña (o se entra como invitado). Los usuarios y el progreso se guardan solo en ese
+navegador (localStorage): se mantienen al cerrarlo, pero se pierden si se borran los datos de navegación. Para pasar el
+progreso a otro dispositivo: *Exportar progreso* (archivo `.json`) e *Importar progreso* en el otro.
 
 ## Documentación
 Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [`docs/ESTADO.md`](docs/ESTADO.md).
@@ -26,6 +28,7 @@ index.html          carga los datos y la app
 css/estilos.css     estilos (claro/oscuro)
 js/app.js           motor: guía, práctica, examen, fallos, progreso
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
+js/usuarios.js      login local (usuario/contraseña con hash), progreso por usuario, importar
 datos/registro.js   módulos y registro de unidades
 datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
 tests/comprobar.js  comprobación automática: errores y seguridad (node tests/comprobar.js)

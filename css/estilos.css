@@ -26,3 +26,7 @@ details summary{cursor:pointer;font-weight:600}
 .tabla th,.tabla td{border:1px solid var(--borde);padding:6px 8px;text-align:left;vertical-align:top}
 .tabla th{background:var(--bg)}
 h4{margin:16px 0 4px}
+.acciones{display:flex;gap:8px;align-items:center}
+.login form{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.login input[type=text],.login input[type=password]{font:inherit;padding:10px;border-radius:8px;border:1px solid var(--borde);background:var(--bg);color:var(--txt);width:16em;max-width:100%}
+.error{color:var(--ko);margin:0;min-height:1em}

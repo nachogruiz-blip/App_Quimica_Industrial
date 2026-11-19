@@ -36,5 +36,17 @@ for (const f of fs.readdirSync(path.join(raiz, "datos")).filter(f => f.endsWith(
     console.log(`${grave ? "❌" : "⚠️ "} ${f} ↔ «${r.pdf}» (${largo} palabras): ${t.slice(r.ini, r.fin).join(" ")}`);
   }
 }
-if (graves) { console.error(`❌ ${graves} fragmento(s) copiados literalmente: redáctalos con otras palabras.`); process.exit(1); }
-console.log("✅ Sin copias literales de los materiales");
+// Privacidad: términos prohibidos (centro, nombres) definidos en el repo privado, para no escribirlos aquí.
+const ctx = path.join(mat, "CONTEXTO_PRIVADO.md");
+if (fs.existsSync(ctx)) {
+  const md = fs.readFileSync(ctx, "utf8").split(/^## Términos prohibidos.*$/m)[1] || "";
+  const terminos = [...md.matchAll(/^- (.+)$/gm)].map(m => m[1].trim().toLowerCase()).filter(Boolean);
+  const rastreados = execFileSync("git", ["ls-files"], { cwd: raiz }).toString().split("\n").filter(Boolean);
+  for (const f of rastreados) {
+    const txt = fs.readFileSync(path.join(raiz, f), "utf8").toLowerCase();
+    for (const t of terminos) if (txt.includes(t)) { graves++; console.log(`❌ ${f}: contiene un término privado («${t}»)`); }
+  }
+} else console.log("⚠️  Sin CONTEXTO_PRIVADO.md: no se comprueban términos privados.");
+
+if (graves) { console.error(`❌ ${graves} problema(s): copias literales (redáctalas de nuevo) o términos privados (quítalos).`); process.exit(1); }
+console.log("✅ Sin copias literales ni términos privados");

@@ -1,6 +1,7 @@
 // Comprobación automática de la app: node tests/comprobar.js
 // Requiere Playwright con Chromium (preinstalado en el entorno de Claude Code; si no: npm i -D playwright && npx playwright install chromium).
 // 1) Valida el formato de todas las preguntas y muestrea 200 veces cada numérica.
+// 0) Prueba el login local (crear usuario, contraseña incorrecta, invitado, importar progreso).
 // 2) Responde en el navegador todas las preguntas de cada UD con la solución correcta y exige 100 % de aciertos.
 const path = require("path");
 const { chromium } = require("playwright");
@@ -13,6 +14,28 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
   p.on("pageerror", e => errores.push(e.message));
   p.on("console", m => m.type() === "error" && errores.push(m.text()));
   await p.goto(URL);
+
+  // Login local: crear usuario, contraseña incorrecta, salir, invitado, volver a entrar (deja la sesión abierta para el resto).
+  const fallosLogin = [];
+  const login = async (u, c) => { await p.fill("#l-usuario", u); await p.fill("#l-clave", c); await p.click("#l-entrar");
+    await p.waitForFunction(() => document.querySelector(".barra-prog") || document.getElementById("l-error")?.textContent); };
+  if (!(await p.$("#f-login"))) fallosLogin.push("sin sesión no aparece el login");
+  await login("prueba", "clave-1");
+  if (!(await p.$(".card .barra-prog"))) fallosLogin.push("no entra tras crear usuario");
+  if (!(await p.textContent("#usuario-barra")).includes("prueba")) fallosLogin.push("la barra no muestra el usuario");
+  await p.evaluate(() => { const ud = UNIDADES[0]; guardar({ [ud.preguntas[0].id]: { a: 1, f: 0, ultimo: true } }); });
+  await p.click("#salir");
+  await login("prueba", "mala");
+  if (!(await p.textContent("#l-error")).includes("incorrectos")) fallosLogin.push("acepta una contraseña incorrecta");
+  await p.click("#l-invitado");
+  if ((await p.evaluate(() => Object.keys(cargar()).length)) !== 0) fallosLogin.push("el invitado ve el progreso de otro usuario");
+  await p.click("#salir");
+  await login("Prueba", "clave-1");
+  if ((await p.evaluate(() => Object.keys(cargar()).length)) !== 1) fallosLogin.push("al volver a entrar no recupera su progreso");
+  const mezcla = await p.evaluate(() => JSON.stringify(mezclarProgreso({ x: { a: 1, f: 0, ultimo: true } },
+    { x: { a: 2, f: 1, ultimo: false }, y: { a: "<img>", f: 0 }, z: { a: 0, f: 1, ultimo: false } })));
+  if (mezcla !== JSON.stringify({ x: { a: 2, f: 1, ultimo: false }, z: { a: 0, f: 1, ultimo: false } })) fallosLogin.push("importar progreso mezcla mal: " + mezcla);
+  await p.evaluate(() => guardar({}));
 
   const problemas = await p.evaluate(() => {
     const mal = [], ids = new Set();
@@ -41,6 +64,7 @@ const URL = "file://" + path.resolve(__dirname, "..", "index.html");
     for (const txt of ["", "abc", "12abc"]) if (leerNumero(txt).length) mal.push(`leerNumero("${txt}") debería rechazarse`);
     return mal;
   });
+  problemas.push(...fallosLogin.map(e => "login: " + e));
 
   // Seguridad: sin PDFs en git, sin recursos externos ni código dinámico (la app es estática y pública).
   const fs = require("fs"), { execSync } = require("child_process");

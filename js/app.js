@@ -1,10 +1,6 @@
-// Motor de la app: rutas por hash, guía, práctica, repaso de fallos y progreso en localStorage.
+// Motor de la app: rutas por hash, login local, guía, práctica, repaso de fallos y progreso (cargar/guardar en js/usuarios.js).
 "use strict";
 const $app = document.getElementById("app");
-const CLAVE = "qi-progreso-v1";
-
-function cargar() { try { return JSON.parse(localStorage.getItem(CLAVE)) || {}; } catch { return {}; } }
-function guardar(p) { try { localStorage.setItem(CLAVE, JSON.stringify(p)); } catch {} }
 function anotar(qid, acierto) {
   const p = cargar(); const r = p[qid] || { a: 0, f: 0 };
   acierto ? r.a++ : r.f++; r.ultimo = acierto; p[qid] = r; guardar(p);
@@ -28,8 +24,72 @@ function vistaInicio() {
     return `<h2>${m.nombre}${m.codigo ? ` <span class="sub">(${m.codigo})</span>` : ""}</h2>` +
       (uds.length ? uds.map(tarjeta).join("") : `<p class="sub">Próximamente.</p>`);
   }).join("") +
-    `<p class="sub">El progreso se guarda en este navegador. <button id="reset">Borrar progreso</button></p>`;
-  document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo el progreso?")) { guardar({}); vistaInicio(); } };
+    `<div class="card"><b>Tu progreso</b>
+      <p class="sub">Se guarda en este navegador y se mantiene al cerrarlo. Se pierde si borras los datos de navegación o usas
+      el modo incógnito, y no pasa solo a otro navegador o dispositivo: para eso, expórtalo a un archivo e impórtalo allí.</p>
+      <div class="pestanas"><button id="exportar">⬇️ Exportar progreso</button><label class="btn">⬆️ Importar progreso
+      <input type="file" id="importar" accept=".json,application/json" hidden></label><button id="reset">Borrar progreso</button></div>
+      <p class="sub" id="msg-progreso"></p></div>`;
+  const msg = document.getElementById("msg-progreso");
+  document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo tu progreso?")) { guardar({}); vistaInicio(); } };
+  document.getElementById("exportar").onclick = () => {
+    const u = usuarioActual();
+    const datos = { app: "quimica-industrial", version: 1, usuario: u.nombre, fecha: new Date().toISOString(), progreso: cargar() };
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(datos, null, 1)], { type: "application/json" }));
+    a.download = `progreso-${u.nombre}-${datos.fecha.slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+  document.getElementById("importar").onchange = async e => {
+    const archivo = e.target.files[0]; if (!archivo) return;
+    try {
+      const datos = JSON.parse(await archivo.text());
+      if (datos.app !== "quimica-industrial" || typeof datos.progreso !== "object") throw new Error();
+      guardar(mezclarProgreso(cargar(), datos.progreso)); vistaInicio();
+      document.getElementById("msg-progreso").textContent = `✅ Importadas ${Object.keys(datos.progreso).length} preguntas.`;
+    } catch { msg.textContent = "❌ El archivo no es un progreso exportado por esta app."; }
+  };
+}
+
+// Login local: entrar, crear usuario o entrar como invitado (ver js/usuarios.js).
+function vistaLogin() {
+  const hay = Object.keys(almacen.leer(USUARIOS, {})).length > 0;
+  $app.innerHTML = `<div class="card login"><h2>${hay ? "Entrar" : "Crear usuario"}</h2>
+    <form id="f-login">
+      <label>Usuario<br><input type="text" id="l-usuario" autocomplete="username" required></label>
+      <label>Contraseña<br><input type="password" id="l-clave" autocomplete="${hay ? "current" : "new"}-password" required></label>
+      <label class="sub"><input type="checkbox" id="l-recordar" checked> Mantener la sesión abierta en este dispositivo</label>
+      <p id="l-error" class="error"></p>
+      <button class="btn-prim" id="l-entrar">${hay ? "Entrar" : "Crear usuario y entrar"}</button>
+      ${hay ? `<button type="button" id="l-nuevo">Crear otro usuario</button>` : ""}
+      <button type="button" id="l-invitado">Entrar como invitado</button>
+    </form>
+    <p class="sub">Los usuarios y el progreso se guardan solo en este navegador: no se envían a ningún sitio.</p></div>`;
+  let crear = !hay;
+  const err = document.getElementById("l-error");
+  const nuevo = document.getElementById("l-nuevo");
+  if (nuevo) nuevo.onclick = () => { crear = true; nuevo.remove(); document.querySelector(".login h2").textContent = "Crear usuario";
+    document.getElementById("l-entrar").textContent = "Crear usuario y entrar"; document.getElementById("l-clave").autocomplete = "new-password"; };
+  document.getElementById("l-invitado").onclick = () => { abrirSesion(INVITADO, false); router(); };
+  document.getElementById("f-login").onsubmit = async e => {
+    e.preventDefault();
+    const nombre = document.getElementById("l-usuario").value, clave = document.getElementById("l-clave").value;
+    const recordar = document.getElementById("l-recordar").checked;
+    if (crear) { const fallo = await registrar(nombre, clave); if (fallo) { err.textContent = fallo; return; } }
+    const id = await entrar(nombre, clave);
+    if (!id) { err.textContent = "Usuario o contraseña incorrectos."; return; }
+    abrirSesion(id, recordar); router();
+  };
+}
+
+function pintarUsuario() {
+  const u = usuarioActual(), zona = document.getElementById("usuario-barra");
+  zona.textContent = "";
+  if (!u) return;
+  const nombre = document.createElement("span"); nombre.className = "sub"; nombre.textContent = "👤 " + u.nombre;
+  const salir = document.createElement("button"); salir.className = "btn-icono"; salir.id = "salir"; salir.textContent = "Salir";
+  salir.onclick = () => { cerrarSesion(); if (location.hash && location.hash !== "#/") location.hash = "#/"; else router(); };
+  zona.append(nombre, " ", salir);
 }
 
 function cabeceraUD(ud, activa) {
@@ -145,6 +205,8 @@ function siguiente(s) {
 
 // ---------- Router ----------
 function router() {
+  pintarUsuario();
+  if (!usuarioActual()) return vistaLogin();
   const [, , id, vista] = location.hash.split("?")[0].split("/");
   const ud = id && udPorId(id);
   if (!ud) return vistaInicio();
