@@ -12,8 +12,8 @@ test. Todo el contenido y la documentación van en **español**. `CLAUDE.md` sol
 | Copias literales de los PDFs (necesita el repo de materiales al lado y `pdftotext`) | `node tests/derechos.js` |
 | Ver la app | abrir `index.html` en el navegador (`file://`, sin servidor) |
 
-La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada push y PR. Publicar = push a `main`:
-Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
+La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada push y PR. Publicar = fusionar el PR en
+`main` (cuando el usuario lo pida y la CI esté en verde): Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
 
 ## Arquitectura en breve
 - `index.html` carga scripts clásicos en orden: `js/utilidades.js` → `js/usuarios.js` → `datos/registro.js` →
@@ -34,7 +34,9 @@ Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
   la CI (Playwright, TypeScript) no forman parte de la app.
 - Contenido en `datos/<modulo>_udN.js` con `registrarUD({...})`, enlazado en `index.html` (el test lo exige). Ejemplo de
   referencia: `datos/tsf_ud5.js`. PDFs fuente en el repo privado `App_Quimica_Industrial_materials`.
-- Seguir la notación de los apuntes de clase («Decisiones» en `docs/ESTADO.md`).
+- Seguir la notación de los apuntes de clase («Decisiones» en `docs/ESTADO.md`). Unidades sin apuntes de teoría: teoría
+  general y `apuntes` que remite a los ejercicios; lo que no viene en los apuntes se marca como ampliación
+  (`docs/flujo_trabajo.md`, paso 3).
 - **IDs de pregunta estables** (`tsf5-12`, `tsf5-n3`): nunca renumerar ni reutilizar; el progreso se guarda por ID.
 - Cada pregunta lleva `explicacion` y `seccion`; las numéricas, el desarrollo con los valores concretos. Cada sección de
   la guía lleva `apuntes` (dónde está en los apuntes) para «Dónde estudiarlo».
