@@ -47,6 +47,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 6. [ ] Publicar con acceso controlado: Cloudflare Workers con contraseña y luego repo privado. Publicada en workers.dev (2026-11-19). Acceso con `worker.mjs` (usuario/contraseña, secreto `USUARIOS`): falta que el
    usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
+   GitHub Pages estaba activado desde `main` (copia de la app sin contraseña): el usuario lo despublicó el 2026-11-20
+   (Settings → Pages → Unpublish, origen «None»; la dirección github.io da 404).
 7. [x] Pulsar la pestaña activa vuelve a cargar la sección (resuelto con el nuevo menú).
 8. [x] Instalable como app (PWA): `manifest.webmanifest` + `iconos/` (dibujo propio `icono.svg`; los PNG se generan
    renderizándolo con Playwright). El manifest se enlaza desde `js/app.js` solo en http(s). `worker.mjs` sirve sin
