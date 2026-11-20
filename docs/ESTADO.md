@@ -48,6 +48,11 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
   tipos de los datos (`tipos.d.ts` + `jsconfig.json`); `.editorconfig` y `.gitattributes`; CSS consolidado; diálogo
   propio en vez de `confirm()`; emojis decorativos ocultos al lector de pantalla; versión en Ajustes; perfiles locales con
   PBKDF2 de 600 000 iteraciones (los antiguos se actualizan al entrar).
+- [x] Revisión del contenido de las 331 preguntas (2026-11-20): conceptuales correctas; corregidos rangos de datos
+  poco realistas en 8 numéricas (tsf5-n8 podía salir con Re > 2000 aunque dice «laminar»; tsf5-n12 daba presiones
+  negativas; tsf4-n2 hasta 1600 m/s; tsf3-n9 densidades de hasta 40 g/cm³; mei4-n20 podía dar 0 A; fpm4-n6/n7
+  con riqueza y densidad incoherentes; fpm4-n12/n13 con HCl de más del 38 %). fpm4-n39: el error relativo
+  se divide ahora entre el valor verdadero (la concentración medida), como define fpm4-33; antes, entre el de la etiqueta.
 
 ## Pendiente (en orden)
 1. [ ] **El usuario revisa el contenido** (TSF, MEI y FPM; empezó por TSF UD5) → aplicar sus correcciones y anotar las preferencias en «Decisiones».

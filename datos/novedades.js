@@ -3,6 +3,14 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-20-5",
+    titulo: "Preguntas revisadas",
+    puntos: [
+      "Se han revisado todas las preguntas: algunos problemas podían salir con datos imposibles (presiones negativas, ácidos más concentrados de lo que existe…) y ya no pasa.",
+      "En el problema del error de la etiqueta del HCl, el error relativo se calcula ahora dividiendo entre el valor verdadero (el medido)."
+    ]
+  },
+  {
     id: "2026-11-20-4",
     titulo: "Nueva asignatura: Formulación y preparación de mezclas",
     puntos: [

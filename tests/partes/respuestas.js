@@ -8,7 +8,7 @@ module.exports = async ctx => {
   for (const [id, n] of uds) {
     // El modo práctica toma hasta 20 preguntas al azar: se repiten rondas hasta cubrirlas todas.
     const vistas = new Set();
-    for (let ronda = 0; ronda < 30 && vistas.size < n; ronda++) {
+    for (let ronda = 0; ronda < 100 && vistas.size < n; ronda++) {
       await p.goto(`${URL_LOCAL}#/ud/${id}/practicar?r=${ronda}`);
       await p.waitForSelector(".card b");
       for (;;) {

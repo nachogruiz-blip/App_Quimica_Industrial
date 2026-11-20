@@ -195,7 +195,7 @@ registrarUD({
       explicacion: v => { const P = v.rc * G * v.V, E = v.rl * G * v.V;
         return `V = ${fmt(v.V / 1000)} m³. Peso: P = ${fmt(v.rc * 1000)}·9,8·${fmt(v.V / 1000)} = ${fmt(P)} N.<br>Empuje: E = ${fmt(v.rl * 1000)}·9,8·${fmt(v.V / 1000)} = ${fmt(E)} N.<br>T = P − E = <b>${fmt(P - E)} N</b>.`; } },
     { id: "tsf3-n9", tipo: "numerica", seccion: 5,
-      variables: { W: [50, 200, 5], E: [5, 45, 1] },
+      variables: { W: [100, 200, 5], E: [25, 45, 1] },
       enunciado: "Una piedra pesa {W} kp en el aire y, sumergida del todo en agua, su peso aparente es {E} kp menor. ¿Cuál es su densidad en g/cm³?",
       resolver: v => v.W / v.E,
       unidad: "g/cm³", tolerancia: 0.02,

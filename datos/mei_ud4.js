@@ -645,7 +645,7 @@ registrarUD({
       explicacion: v => { const Rp = v.La * v.Lb / (v.La + v.Lb), Up = v.U * Rp / (v.R1 + Rp);
         return `R_p = ${fmt(Rp)} Ω; I_total = ${v.U}/(${v.R1} + ${fmt(Rp)}) = ${fmt(v.U / (v.R1 + Rp))} A; U_p = ${fmt(Up)} V.<br>I_A = U_p/R_A = ${fmt(Up)}/${v.La} = ${fmt(Up / v.La)} A = <b>${fmt(Up / v.La * 1000)} mA</b>.`; } },
     { id: "mei4-n20", tipo: "numerica", seccion: 4,
-      variables: { I1: [0.5, 5, 0.5], I2: [0.5, 5, 0.5], I3: [0.1, 1, 0.1] },
+      variables: { I1: [0.5, 5, 0.5], I2: [0.5, 5, 0.5], I3: [0.1, 0.9, 0.1] },
       enunciado: "A un nodo llegan dos corrientes de {I1} A y {I2} A, y salen dos: una de {I3} A y otra desconocida. ¿Cuánto vale la desconocida?",
       resolver: v => v.I1 + v.I2 - v.I3,
       unidad: "A", tolerancia: 0.02,
