@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-20-3",
+    titulo: "Nueva asignatura: Mantenimiento electromecánico",
+    puntos: [
+      "Ya está la UD4 de Mantenimiento electromecánico: electricidad, circuitos, protecciones, seguridad eléctrica y generación.",
+      "Tiene 86 preguntas, 30 de ellas problemas de circuitos con datos que cambian cada vez.",
+      "La encontrarás en Estudio, Examen y Test, como las demás asignaturas."
+    ]
+  },
+  {
     id: "2026-11-20-2",
     titulo: "Transporte de sólidos y fluidos: 4 unidades nuevas",
     puntos: [

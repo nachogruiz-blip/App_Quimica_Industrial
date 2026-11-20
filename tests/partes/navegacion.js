@@ -12,6 +12,15 @@ module.exports = async ctx => {
   const abajo = await m.$eval(".nav-principal", n => getComputedStyle(n).position === "fixed" && Math.abs(n.getBoundingClientRect().bottom - innerHeight) < 2);
   if (!abajo) mal("navegación: en el móvil la barra no está fija abajo");
   if (await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal("móvil: la página se desborda a lo ancho");
+  // Ninguna sección de ninguna guía debe salirse de la pantalla del móvil (tablas demasiado anchas, fórmulas largas…).
+  for (const [ud, n] of await m.evaluate(() => UNIDADES.map(u => [u.id, u.guia.length]))) {
+    await m.goto(`${URL_LOCAL}#/ud/${ud}/guia`); await m.waitForSelector("#sec-1");
+    await m.$$eval("details[id^=sec-]", ds => ds.forEach(d => { d.open = true; }));
+    const anchas = await m.evaluate(() => [...document.querySelectorAll("details[id^=sec-]")]
+      .filter(d => d.scrollWidth > d.clientWidth + 1 || d.getBoundingClientRect().right > innerWidth + 1).map(d => d.id));
+    if (anchas.length || await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal(`móvil: la guía de ${ud} se sale de la pantalla (${anchas.join(", ") || "página"}, de ${n} secciones)`);
+  }
+  await m.goto(URL_LOCAL); await m.waitForSelector(".barra-prog");
 
   // Test de un tema concreto: solo el apartado 2, todas sus preguntas.
   await m.click('a[data-nav="test"]'); await m.click('a.card[href="#/test/tsf"]'); await m.check('input[value="temas"]');
