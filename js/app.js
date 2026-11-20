@@ -8,6 +8,11 @@ const $app = document.getElementById("app");
 let sesionActiva = null; // ronda de preguntas en curso (para avisar antes de abandonarla)
 let reloj = null;        // cronómetro del examen
 
+// Anchura de las barras de progreso: se pinta con data-pct="N" y aquí se aplica desde JS, porque la CSP no permite
+// atributos style="" en el HTML (style-src sin 'unsafe-inline').
+const aplicarAnchos = raiz => raiz.querySelectorAll("[data-pct]").forEach(el => { el.style.width = `${+el.dataset.pct || 0}%`; });
+new MutationObserver(() => aplicarAnchos($app)).observe($app, { childList: true, subtree: true });
+
 function anotar(qid, acierto) {
   const p = cargar(); const r = p[qid] || { a: 0, f: 0 };
   acierto ? r.a++ : r.f++; r.ultimo = acierto; p[qid] = r; guardar(p);
@@ -22,12 +27,14 @@ function dominadas(preguntas) { const p = cargar(); return preguntas.filter(q =>
 function barraProgreso(preguntas) {
   const n = preguntas.length, d = dominadas(preguntas), pct = n ? Math.round(100 * d / n) : 0;
   return `<div class="barra-prog" role="progressbar" aria-label="Preguntas dominadas" aria-valuemin="0" aria-valuemax="100"
-    aria-valuenow="${pct}"><div style="width:${pct}%"></div></div><div class="sub">Dominas ${d} de ${n} preguntas (${pct} %)</div>`;
+    aria-valuenow="${pct}"><div data-pct="${pct}"></div></div><div class="sub">Dominas ${d} de ${n} preguntas (${pct} %)</div>`;
 }
-const nombreModulo = m => (m.icono ? m.icono + " " : "") + m.nombre;
+/** Emoji decorativo: el lector de pantalla no lo lee. */
+const ico = e => `<span aria-hidden="true">${e}</span>`;
+const nombreModulo = m => (m.icono ? ico(m.icono) + " " : "") + m.nombre;
 const migas = enlaces => `<p class="sub migas">${enlaces.map(([h, t]) => `<a href="${h}">${t}</a>`).join(" › ")}</p>`;
 const NOMBRES = { estudio: "Estudio", examen: "Examen", test: "Test" };
-const TITULOS = { estudio: "🔬 Estudio", examen: "⏱️ Examen", test: "🧪 Test" };
+const TITULOS = { estudio: `${ico("🔬")} Estudio`, examen: `${ico("⏱️")} Examen`, test: `${ico("🧪")} Test` };
 
 // ---------- Elegir asignatura (común a Estudio, Examen y Test) ----------
 function tarjetaModulo(m, destino) {
@@ -212,7 +219,7 @@ function mostrarPregunta(s) {
   $app.innerHTML = cabeceraSesion(s) +
     `<p class="sub estado-ronda"><span>Pregunta ${s.i + 1} de ${s.lista.length}${examen ? "" : ` · Aciertos: ${s.aciertos}`}</span>
        ${examen ? `<span>⏱️ <span id="reloj">${mmss(Date.now() - s.inicio)}</span></span>` : ""}</p>
-     <div class="avance"><div style="width:${pct}%"></div></div>
+     <div class="avance"><div data-pct="${pct}"></div></div>
      <div class="card">${s.varias ? `<p class="etiqueta">${ud.codigo} · ${ud.titulo}</p>` : ""}
        <p><b>${v ? sustituir(q.enunciado, v) : q.enunciado}</b></p>${cuerpo}<div id="fb" aria-live="polite"></div></div>`;
 
@@ -283,7 +290,7 @@ function vistaAjustes() {
   const u = usuarioActual(), tema = temaGuardado();
   const resumen = MODULOS.filter(m => udsDeModulo(m.id).length)
     .map(m => `<p><b>${nombreModulo(m)}</b></p>${barraProgreso(udsDeModulo(m.id).flatMap(x => x.preguntas))}`).join("");
-  $app.innerHTML = `<h1>⚙️ Ajustes</h1>
+  $app.innerHTML = `<h1>${ico("⚙️")} Ajustes</h1>
     <section class="card"><h2>👤 Usuario</h2><p>Has entrado como <b id="aj-nombre"></b>.</p>
       ${u.remoto ? `<p class="sub">Para cerrar la sesión, cierra el navegador.</p>` : `<button id="aj-salir">Cerrar sesión</button>`}</section>
     <section class="card"><h2>🌓 Apariencia</h2>
@@ -297,7 +304,8 @@ function vistaAjustes() {
       <input type="file" id="importar" accept=".json,application/json" hidden></label><button id="reset" class="peligro">🗑️ Borrar progreso</button></div>
       <p class="sub" id="msg-progreso" aria-live="polite"></p></section>
     <section class="card"><h2>📲 Instalar como app</h2>${bloqueInstalar()}</section>
-    <section class="card"><h2>🆕 Novedades</h2><a href="#/novedades">Ver todas las novedades de la app</a></section>`;
+    <section class="card"><h2>🆕 Novedades</h2><a href="#/novedades">Ver todas las novedades de la app</a>
+      <p class="sub">Versión de la app: <span id="version">${(window.NOVEDADES || [])[0]?.id || "—"}</span></p></section>`;
   document.getElementById("aj-nombre").textContent = u.nombre;
   const salir = document.getElementById("aj-salir");
   if (salir) salir.onclick = () => { cerrarSesion(); location.hash = "#/"; router(); };
@@ -305,7 +313,9 @@ function vistaAjustes() {
   if (inst) inst.onclick = async () => { const a = avisoInstalar; avisoInstalar = null; a.prompt(); await a.userChoice.catch(() => {}); vistaAjustes(); };
   $app.querySelectorAll("input[name=tema]").forEach(r => r.onchange = () => aplicarTema(r.value));
   const msg = document.getElementById("msg-progreso");
-  document.getElementById("reset").onclick = () => { if (confirm("¿Borrar todo tu progreso? No se puede deshacer.")) { guardar({}); vistaAjustes(); } };
+  document.getElementById("reset").onclick = async () => {
+    if (await confirmar("¿Borrar todo tu progreso? No se puede deshacer.", { si: "Borrar progreso", peligro: true })) { guardar({}); vistaAjustes(); }
+  };
   document.getElementById("exportar").onclick = () => {
     const datos = { app: "quimica-industrial", version: 1, usuario: u.nombre, fecha: new Date().toISOString(), progreso: cargar() };
     const a = document.createElement("a");
@@ -397,11 +407,38 @@ function router() {
 document.addEventListener("click", e => {
   const a = e.target.closest("a[href^='#']");
   if (!a || a.target === "_blank" || e.defaultPrevented) return;
-  if (sesionActiva && sesionActiva.respuestas.length &&
-      !confirm("¿Dejar esta ronda? Las respuestas que ya has dado sí cuentan en tu progreso.")) { e.preventDefault(); return; }
-  const h = a.getAttribute("href");
+  const h = a.getAttribute("href"), irA = () => { if (h === location.hash || (h === "#/" && !location.hash)) router(); else location.hash = h; };
+  if (sesionActiva && sesionActiva.respuestas.length) {
+    e.preventDefault();
+    confirmar("¿Dejar esta ronda? Las respuestas que ya has dado sí cuentan en tu progreso.", { si: "Dejar la ronda", no: "Seguir" })
+      .then(ok => { if (ok) irA(); });
+    return;
+  }
   if (h === location.hash || (h === "#/" && !location.hash)) { e.preventDefault(); router(); }
 });
+
+/**
+ * Pregunta de confirmación con <dialog> (sustituye a confirm(): mismo estilo que la app y accesible con teclado).
+ * Escape o «Cancelar» → false. Se construye con textContent.
+ * @param {string} texto
+ * @param {{ si?: string, no?: string, peligro?: boolean }} [opciones]
+ * @returns {Promise<boolean>}
+ */
+function confirmar(texto, { si = "Aceptar", no = "Cancelar", peligro = false } = {}) {
+  return new Promise(resolver => {
+    const d = document.createElement("dialog"); d.className = "card confirmar"; d.id = "confirmar";
+    const p = document.createElement("p"); p.textContent = texto;
+    const bNo = document.createElement("button"); bNo.id = "confirmar-no"; bNo.textContent = no;
+    const bSi = document.createElement("button"); bSi.id = "confirmar-si"; bSi.textContent = si;
+    bSi.className = peligro ? "peligro" : "btn-prim";
+    const pie = document.createElement("p"); pie.className = "pestanas"; pie.append(bNo, bSi);
+    let respuesta = false;
+    bSi.onclick = () => { respuesta = true; d.close(); };
+    bNo.onclick = () => d.close();
+    d.addEventListener("close", () => { d.remove(); resolver(respuesta); });
+    d.append(p, pie); document.body.append(d); d.showModal(); bNo.focus();
+  });
+}
 
 // ---------- Novedades ----------
 // Recuadro al entrar con las novedades que este usuario no ha visto (datos/novedades.js). Se construye con textContent.
@@ -437,7 +474,7 @@ function mostrarNovedades(forzar) {
   caja.append(t, listaNovedades(nuevas), pie); fondo.append(caja); document.body.append(fondo); ok.focus({ preventScroll: true }); caja.scrollTop = 0;
 }
 function vistaNovedades() {
-  $app.innerHTML = migas([["#/ajustes", "Ajustes"]]) + `<h1>🆕 Novedades</h1><div class="card" id="todas-novedades"></div>`;
+  $app.innerHTML = migas([["#/ajustes", "Ajustes"]]) + `<h1>${ico("🆕")} Novedades</h1><div class="card" id="todas-novedades"></div>`;
   document.getElementById("todas-novedades").append(listaNovedades(window.NOVEDADES || []));
 }
 

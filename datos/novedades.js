@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-20",
+    titulo: "Pequeñas mejoras de uso",
+    puntos: [
+      "Al salir de una ronda empezada o al borrar tu progreso, la app te pregunta con su propio recuadro: «Seguir» o «Dejar la ronda».",
+      "En Ajustes → Novedades puedes ver la versión de la app que estás usando.",
+      "Más seguridad por dentro; no cambia nada en cómo estudias."
+    ]
+  },
+  {
     id: "2026-11-19-5",
     titulo: "Nuevo aspecto en tonos lila",
     puntos: [

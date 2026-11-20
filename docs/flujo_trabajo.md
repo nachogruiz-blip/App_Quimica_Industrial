@@ -10,7 +10,7 @@
    `js/utilidades.js` antes de escribir preguntas numéricas. Anota discrepancias en `docs/ESTADO.md`.
 5. **Redactar `datos/<modulo>_udN.js`** con palabras propias, siguiendo `docs/formato_datos.md`, y añadir el `<script>` en `index.html`.
 6. **Comprobar**: `node tests/comprobar.js` (valida formato, muestrea numéricas, responde todas en Chromium y revisa seguridad)
-   y `node tests/derechos.js` (busca frases copiadas de los PDFs). Ver «Revisiones obligatorias» en `CLAUDE.md`.
+   y `node tests/derechos.js` (busca frases copiadas de los PDFs). Ver «Lista antes de cada commit» en `AGENTS.md`.
    Opcional: captura en móvil (390×844) para revisar el aspecto.
 7. **Añadir la novedad** al principio de `datos/novedades.js` (p. ej. «Nueva unidad: TSF UD7 Gases industriales»).
    **Actualizar `docs/ESTADO.md`** (hecho, pendiente, inventario, tabla de unidades) y commit + push a `main`.

@@ -27,16 +27,21 @@ usuario local (o se entra como invitado). El progreso se guarda solo en ese nave
 cerrarlo, pero se pierde si se borran los datos de navegación. Para pasarlo a otro dispositivo: *Ajustes → Exportar
 progreso* (archivo `.json`) e *Importar progreso* en el otro.
 
-## Documentación
-Para retomar el trabajo (personas o agentes de IA): [`CLAUDE.md`](CLAUDE.md) y [`docs/ESTADO.md`](docs/ESTADO.md).
+## Documentación y desarrollo
+Para retomar el trabajo (personas o agentes de IA): [`AGENTS.md`](AGENTS.md) (comandos, reglas y lista antes de cada
+commit) y [`docs/ESTADO.md`](docs/ESTADO.md).
+
+Comprobación: `node tests/comprobar.js` (necesita Playwright con Chromium). La CI de GitHub la ejecuta en cada push.
 
 ## Estructura
 ```
 index.html          carga los datos y la app
-_headers            cabeceras de seguridad para Cloudflare
-worker.mjs          en Cloudflare, pide usuario y contraseña antes de servir la app (secreto USUARIOS)
+worker.mjs          en Cloudflare, pide usuario y contraseña y pone las cabeceras de seguridad (CSP, etc.)
 wrangler.jsonc      configuración de Cloudflare (Workers con archivos estáticos)
-.assetsignore       lo que NO se publica (docs, tests, .md, .git)
+.assetsignore       lo que NO se publica (docs, tests, .md, .git, configuración)
+.github/workflows/  CI: tests y tipos en cada push
+jsconfig.json       comprobación de tipos de los datos (editor y CI), con tipos.d.ts
+.editorconfig       formato común (2 espacios, LF, UTF-8)
 manifest.webmanifest datos para instalar la app en el móvil (PWA)
 iconos/             icono de la app (SVG propio y PNG generados a partir de él)
 css/estilos.css     estilos (claro/oscuro)
@@ -46,9 +51,11 @@ js/usuarios.js      login local (usuario/contraseña con hash), progreso por usu
 datos/registro.js   módulos y registro de unidades
 datos/novedades.js  novedades que se muestran al entrar (la más reciente primero)
 datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
-tests/comprobar.js  comprobación automática: errores y seguridad (node tests/comprobar.js)
+herramientas/       generar_usuario.html: genera las líneas (con hash) del secreto USUARIOS
+tests/comprobar.js  comprobación automática (node tests/comprobar.js); cada parte en tests/partes/
 tests/derechos.js   busca copias literales de los PDFs (node tests/derechos.js)
-docs/               documentación del proyecto (estado, formato, flujo, derechos)
+docs/               documentación del proyecto (estado, formato, flujo, derechos, despliegue)
+AGENTS.md           instrucciones para agentes de IA (CLAUDE.md lo importa)
 materiales/         PDFs originales — ignorado por git, NO se sube
 ```
 

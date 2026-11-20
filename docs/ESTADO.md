@@ -2,7 +2,7 @@
 
 > **Agente que retoma el trabajo: empieza aquí.** Actualiza este archivo al terminar cada sesión.
 
-Última actualización: 2026-11-19
+Última actualización: 2026-11-20
 
 ## Objetivo
 App de estudio de FP Grado Superior de Química Industrial. El contexto privado (centro, usuarios) está en el repo
@@ -26,10 +26,17 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
   exportar/importar progreso a `.json`. El test prueba el login.
 - [x] Privacidad: sin referencias al centro ni a personas en el repo público (historial reescrito); el contexto privado está en
   `CONTEXTO_PRIVADO.md` del repo de materiales y `tests/derechos.js` comprueba sus «términos prohibidos».
-- [x] Documentación para agentes (`CLAUDE.md`, `AGENTS.md`, `docs/`).
+- [x] Documentación para agentes: `AGENTS.md` es la única fuente (`CLAUDE.md` solo contiene `@AGENTS.md`) y `docs/`.
 - [x] Revisión de errores, seguridad y derechos (2026-11-19): corregido el lector de respuestas numéricas (antes «45.000»
   se leía como 45 aunque la app muestra así las soluciones); `tests/comprobar.js` revisa seguridad; nuevo `tests/derechos.js`
-  (0 copias ≥ 12 palabras en TSF UD5). Sección «Revisiones obligatorias» en `CLAUDE.md`.
+  (0 copias ≥ 12 palabras en TSF UD5). Lista «antes de cada commit» en `AGENTS.md`.
+- [x] Profesionalización (2026-11-20): CI de GitHub (`.github/workflows/comprobar.yml`: tests + tipos); test dividido en
+  `tests/partes/` con semilla reproducible (`SEMILLA=n`) y nuevas comprobaciones (UD enlazadas en `index.html`, sin
+  estilos/scripts en línea, cabeceras en todas las respuestas del worker, diálogo de abandonar ronda, migración de hashes);
+  cabeceras solo en `worker.mjs` (`_headers` eliminado) con CSP sin `'unsafe-inline'` (barras con `data-pct`);
+  tipos de los datos (`tipos.d.ts` + `jsconfig.json`); `.editorconfig` y `.gitattributes`; CSS consolidado; diálogo
+  propio en vez de `confirm()`; emojis decorativos ocultos al lector de pantalla; versión en Ajustes; perfiles locales con
+  PBKDF2 de 600 000 iteraciones (los antiguos se actualizan al entrar).
 
 ## Pendiente (en orden)
 1. [ ] **El usuario revisa TSF UD5** → aplicar sus correcciones y anotar las preferencias en «Decisiones».
@@ -40,11 +47,18 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 6. [ ] Publicar con acceso controlado: Cloudflare Workers con contraseña y luego repo privado. Publicada en workers.dev (2026-11-19). Acceso con `worker.mjs` (usuario/contraseña, secreto `USUARIOS`): falta que el
    usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
+   GitHub Pages estaba activado desde `main` (copia de la app sin contraseña): el usuario lo despublicó el 2026-11-20
+   (Settings → Pages → Unpublish, origen «None»; la dirección github.io da 404).
 7. [x] Pulsar la pestaña activa vuelve a cargar la sección (resuelto con el nuevo menú).
 8. [x] Instalable como app (PWA): `manifest.webmanifest` + `iconos/` (dibujo propio `icono.svg`; los PNG se generan
    renderizándolo con Playwright). El manifest se enlaza desde `js/app.js` solo en http(s). `worker.mjs` sirve sin
    contraseña solo esas rutas exactas (`PUBLICOS`). Ajustes → «Instalar como app» (botón en Chrome/Android e instrucciones).
    Sin service worker: no funciona sin conexión (decisión pendiente si el usuario lo pide).
+9. [x] Decisiones del usuario tras la profesionalización (2026-11-20): **sin licencia**; autor de los commits = alias
+   `patatasss`; secreto `USUARIOS` con hashes (`herramientas/generar_usuario.html`) y límite de intentos
+   (`LIMITE_INTENTOS`, 20/min por IP). Descartados por ahora: `package.json` con Prettier/ESLint y service worker.
+10. [ ] **Lo hace el usuario**: cambiar las líneas en claro del secreto `USUARIOS` por líneas con hash (paso 3 de
+    `docs/despliegue_cloudflare.md`). Mientras tanto el worker sigue aceptando las antiguas.
 
 ## Inventario de materiales (repo privado `App_Quimica_Industrial_materials`)
 | Archivo | Módulo | Contenido | Usado en |
@@ -70,7 +84,10 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | Contenido en `.js`, no `.json` | `fetch` no funciona con `file://` |
 | PDFs en repo privado aparte; este repo público | Posibles derechos de autor (`docs/derechos_autor.md`) |
 | Progreso en `localStorage`, por usuario | Sin servidor; se pasa entre dispositivos exportando/importando un `.json` |
-| Login = perfiles locales (no cuentas en la nube) | Decidido por el usuario. No protege el contenido (la app es pública), solo separa el progreso de cada persona en un mismo navegador |
+| Login local = perfiles locales (no cuentas en la nube) | Decidido por el usuario. Solo se usa abriendo `index.html` en local y separa el progreso de cada persona en un mismo navegador; el contenido lo protege `worker.mjs` en Cloudflare |
+| Contraseñas de `USUARIOS` como hash PBKDF2-SHA256 (10 000 iteraciones) + límite de intentos por IP | Decidido por el usuario (2026-11-20). Pocas iteraciones por el límite de CPU del plan gratuito (10 ms); compensado con contraseñas de ≥ 12 caracteres y el límite de intentos |
+| Sin licencia | Decidido por el usuario (2026-11-20): todos los derechos reservados |
+| Autor de los commits: alias `patatasss` | Decidido por el usuario (2026-11-20): nada de nombres reales en el repo |
 | Nada del centro ni de personas en el repo público | Decidido por el usuario; contexto privado en el repo de materiales |
 | Tres módulos: TSF (0190), MEI (0191), FPM | Decidido por el usuario; ids en `datos/registro.js` |
 | Prioridad inicial: UD4, UD5, UD7; se empezó por TSF UD5 | Decidido por el usuario |
