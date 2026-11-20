@@ -7,9 +7,9 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 ## Contenido
 | Módulo | Unidades |
 |---|---|
-| Transporte de sólidos y fluidos (0190) | UD5 Flujo de fluidos |
-| Mantenimiento electromecánico (0191) | próximamente |
-| Formulación y preparación de mezclas | próximamente |
+| Transporte de sólidos y fluidos (0190) | UD3 Estática, UD4 Dinámica, UD5 Flujo de fluidos, UD6 Elementos de impulsión, UD7 Gases industriales |
+| Mantenimiento electromecánico (0191) | UD4 Identificación y caracterización de máquinas eléctricas |
+| Formulación y preparación de mezclas | UD4.1 Disoluciones y valoraciones |
 
 ## Uso
 - Local: abre `index.html` en el navegador.

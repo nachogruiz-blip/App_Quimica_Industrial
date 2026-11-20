@@ -66,8 +66,8 @@ input[type=text]{font:inherit;padding:10px;border-radius:8px;border:1px solid va
 details summary{cursor:pointer;font-weight:600}
 .indice ol{margin:8px 0 0;padding-left:1.4em}.indice li{margin:4px 0}
 .pie-seccion{text-align:right;margin:12px 0 0}
-.tabla{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem}
-.tabla th,.tabla td{border:1px solid var(--borde);padding:6px 8px;text-align:left;vertical-align:top}
+.tabla{border-collapse:collapse;width:100%;margin:10px 0;font-size:.95rem;display:block;overflow-x:auto}
+.tabla th,.tabla td{border:1px solid var(--borde);padding:6px 8px;text-align:left;vertical-align:top;hyphens:auto;overflow-wrap:break-word}
 .tabla th{background:var(--bg)}
 h4{margin:16px 0 4px}
 

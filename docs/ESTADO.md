@@ -18,6 +18,17 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 - [x] Tipos de pregunta: `test`, `vf`, `numerica` (datos aleatorios + desarrollo de la solución).
 - [x] `js/utilidades.js`: fmt, área, Reynolds, régimen, factor 4f (Colebrook), pérdida de carga.
 - [x] **TSF UD5 Flujo de fluidos** (`datos/tsf_ud5.js`): 8 secciones de guía, 40 preguntas (17 test, 8 V/F, 15 numéricas).
+- [x] **TSF completa, 92 preguntas** (2026-11-20): UD3 Estática (17), UD4 Dinámica (12), UD6 Impulsión/NPSH (7) y UD7 Gases
+  industriales (16). UD3, UD4 y UD6 solo tienen ejercicios: guía con teoría general y `apuntes` que remite a los problemas de
+  la relación. UD7: apuntes + recursos adicionales; su sección 6 (cálculos de compresión) es ampliación. Las numéricas
+  reproducen las soluciones de las relaciones de clase (comprobado).
+- [x] **MEI UD4, 86 preguntas** (2026-11-20, `datos/mei_ud4.js`): 12 secciones (magnitudes, Ohm, potencia y Joule,
+  Kirchhoff, asociación, CC/CA/trifásica, medida, protecciones, seguridad, generación, método y formulario); 56
+  conceptuales y 30 numéricas de circuitos. El valor eficaz (V₀/√2) es ampliación. El test comprueba ahora que ninguna
+  sección de guía se salga de la pantalla del móvil (tablas de más de 3–4 columnas: mejor como lista).
+- [x] **FPM UD4.1, 78 preguntas** (2026-11-20, `datos/fpm_ud4.js`): disoluciones y valoraciones. Sin apuntes de teoría:
+  guía de química general (7 secciones) con `apuntes` que remite a los ejercicios. 33 conceptuales y 45 numéricas que
+  reproducen las soluciones de las relaciones de clase (comprobado). Masas molares redondeadas como en clase.
 - [x] Comprobación automática `node tests/comprobar.js`.
 - [x] Una sola pantalla de acceso en Cloudflare: `worker.mjs` expone `/__usuario` y la app usa ese usuario (sin login local);
   el login local solo aparece al abrir `index.html` en local. Recuadro de novedades al entrar (`datos/novedades.js`).
@@ -39,11 +50,11 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
   PBKDF2 de 600 000 iteraciones (los antiguos se actualizan al entrar).
 
 ## Pendiente (en orden)
-1. [ ] **El usuario revisa TSF UD5** → aplicar sus correcciones y anotar las preferencias en «Decisiones».
-2. [ ] TSF UD7 Gases industriales (teoría + recursos adicionales; el PDF «UD7 Transporte industrial de gases» es casi todo imágenes: leer renderizando páginas).
-3. [ ] MEI UD4 Máquinas eléctricas (44 págs.) + ejercicios de teoría de circuitos.
-4. [ ] TSF UD4 Dinámica de fluidos: solo hay ejercicios; la guía se redacta a partir de ellos (continuidad, Bernoulli). Confirmar con el usuario si quiere teoría.
-5. [ ] Resto de material disponible (ver inventario): TSF UD3, UD6; FPM disoluciones/valoraciones.
+1. [ ] **El usuario revisa el contenido** (TSF, MEI y FPM; empezó por TSF UD5) → aplicar sus correcciones y anotar las preferencias en «Decisiones».
+2. [x] TSF UD7 Gases industriales (2026-11-20).
+3. [x] MEI UD4 (2026-11-20), 86 preguntas.
+4. [x] TSF UD4 Dinámica de fluidos (2026-11-20), con teoría general (decisión del usuario).
+5. [x] FPM UD4.1 (2026-11-20), 78 preguntas. Las tres asignaturas tienen ya unas 80–90 preguntas.
 6. [ ] Publicar con acceso controlado: Cloudflare Workers con contraseña y luego repo privado. Publicada en workers.dev (2026-11-19). Acceso con `worker.mjs` (usuario/contraseña, secreto `USUARIOS`): falta que el
    usuario cree el secreto, confirmar el subdominio neutro y poner el repo en privado, siguiendo `docs/despliegue_cloudflare.md`.
    Lo hace el usuario: requiere su cuenta de Cloudflare. **No activar GitHub Pages.**
@@ -65,15 +76,15 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 |---|---|---|---|
 | `U.D 5 Flujo de fluidos.pdf` | TSF 0190 | Teoría, 11 págs. | `tsf_ud5.js` ✅ |
 | `Ejercicios U.D 5 Flujo de fluidos.pdf` | TSF | 9 problemas con solución | `tsf_ud5.js` ✅ (tipos n13, n15) |
-| `U.D 7 Gases industriales.pdf` | TSF | Teoría compresores, 10 págs. | pendiente |
-| `UD7 Transporte industrial de gases.pdf` | TSF | Recursos adicionales (imágenes), 11 págs. | pendiente |
-| `Ejercicios U.D 3 Estática de fluidos.pdf` | TSF | Ejercicios | pendiente |
-| `Ejercicios U.D 4 Dinámica de fluidos.pdf` | TSF | Ejercicios con solución | pendiente |
-| `Ejercicios U.D 6 Elementos de impulsión.pdf` | TSF | Ejercicios (NPSH) | pendiente |
-| `UD 4 Máquinas Eléctricas 2526.pdf` | MEI 0191 | Teoría, 44 págs. | pendiente |
-| `UD 4 Ejercicios teoría de circuitos.pdf` | MEI | Ejercicios | pendiente |
-| `Ejercicios de disoluciones.pdf` | FPM | UD4.1 Disoluciones | pendiente |
-| `Ejercicios valoraciones.pdf`, `Ejercicio Normalización y valoraciones (1).pdf` | FPM | Valoraciones | pendiente |
+| `U.D 7 Gases industriales.pdf` | TSF | Teoría compresores, 10 págs. | `tsf_ud7.js` ✅ |
+| `UD7 Transporte industrial de gases.pdf` | TSF | Recursos adicionales (imágenes), 11 págs. | `tsf_ud7.js` ✅ |
+| `Ejercicios U.D 3 Estática de fluidos.pdf` | TSF | Ejercicios | `tsf_ud3.js` ✅ |
+| `Ejercicios U.D 4 Dinámica de fluidos.pdf` | TSF | Ejercicios con solución | `tsf_ud4.js` ✅ |
+| `Ejercicios U.D 6 Elementos de impulsión.pdf` | TSF | Ejercicios (NPSH) | `tsf_ud6.js` ✅ |
+| `UD 4 Máquinas Eléctricas 2526.pdf` | MEI 0191 | Teoría, 44 págs. | `mei_ud4.js` ✅ |
+| `UD 4 Ejercicios teoría de circuitos.pdf` | MEI | Ejercicios | `mei_ud4.js` ✅ (sección 11 y numéricas de circuitos) |
+| `Ejercicios de disoluciones.pdf` | FPM | UD4.1 Disoluciones | `fpm_ud4.js` ✅ |
+| `Ejercicios valoraciones.pdf`, `Ejercicio Normalización y valoraciones (1).pdf` | FPM | Valoraciones | `fpm_ud4.js` ✅ |
 
 ## Decisiones tomadas (no reabrir sin preguntar al usuario)
 | Decisión | Motivo |
@@ -91,6 +102,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | Nada del centro ni de personas en el repo público | Decidido por el usuario; contexto privado en el repo de materiales |
 | Tres módulos: TSF (0190), MEI (0191), FPM | Decidido por el usuario; ids en `datos/registro.js` |
 | Prioridad inicial: UD4, UD5, UD7; se empezó por TSF UD5 | Decidido por el usuario |
+| Unas 80 preguntas por asignatura; orden TSF → MEI → FPM | Decidido por el usuario (2026-11-20) |
+| Unidades sin apuntes de teoría (solo ejercicios): guía con teoría general, marcada en `apuntes` | Decidido por el usuario (2026-11-20), para FPM y aplicado también a TSF UD3, UD4 y UD6 |
 | Estilo: paleta lila (acento #6d4fc2 día / #b9a4f5 noche, tonos `--lila-2`, `--lila-3`); verde/rojo solo para acierto/fallo | Decidido por el usuario (2026-11-19) |
 | Emoticonos: menú 🔬 ⏱️ 🧪 ⚙️; asignaturas con `icono` en `datos/registro.js` (💧 TSF, ⚡ MEI, ⚗️ FPM) | Decidido por el usuario |
 | Notación de los apuntes: g = 9,8; Re 2000/4000; «4f» = factor de Darcy; h_f = 4f(L/D)v²/2g | Coherencia con clase |
@@ -100,6 +113,10 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 ## Unidades
 | Módulo | UD | Título | Archivo | Secciones | Preguntas | Estado |
 |---|---|---|---|---|---|---|
+| TSF | UD3 | Estática de fluidos | `datos/tsf_ud3.js` | 6 | 17 | hecha (solo ejercicios + teoría general), pendiente de revisión |
+| TSF | UD4 | Dinámica de fluidos | `datos/tsf_ud4.js` | 5 | 12 | hecha (solo ejercicios + teoría general), pendiente de revisión |
 | TSF | UD5 | Flujo de fluidos | `datos/tsf_ud5.js` | 8 | 40 | hecha, pendiente de revisión del usuario |
-| TSF | UD7 | Gases industriales | `datos/tsf_ud7.js` | – | – | sin empezar |
-| MEI | UD4 | Máquinas eléctricas | `datos/mei_ud4.js` | – | – | sin empezar |
+| TSF | UD6 | Elementos de impulsión | `datos/tsf_ud6.js` | 3 | 7 | hecha (solo ejercicios de NPSH + teoría general), pendiente de revisión |
+| TSF | UD7 | Gases industriales | `datos/tsf_ud7.js` | 6 | 16 | hecha, pendiente de revisión |
+| MEI | UD4 | Identificación y caracterización de máquinas eléctricas | `datos/mei_ud4.js` | 12 | 86 | hecha, pendiente de revisión |
+| FPM | UD4.1 | Disoluciones y valoraciones | `datos/fpm_ud4.js` | 7 | 78 | hecha (solo ejercicios + teoría general), pendiente de revisión |

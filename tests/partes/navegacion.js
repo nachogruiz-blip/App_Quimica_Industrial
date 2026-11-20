@@ -12,19 +12,34 @@ module.exports = async ctx => {
   const abajo = await m.$eval(".nav-principal", n => getComputedStyle(n).position === "fixed" && Math.abs(n.getBoundingClientRect().bottom - innerHeight) < 2);
   if (!abajo) mal("navegación: en el móvil la barra no está fija abajo");
   if (await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal("móvil: la página se desborda a lo ancho");
+  // Ninguna sección de ninguna guía debe salirse de la pantalla del móvil (tablas demasiado anchas, fórmulas largas…).
+  // Se mira a 320 px (móvil pequeño) para tener margen: con otras fuentes el texto ocupa algo más.
+  await m.setViewportSize({ width: 320, height: 700 });
+  for (const [ud, n] of await m.evaluate(() => UNIDADES.map(u => [u.id, u.guia.length]))) {
+    await m.goto(`${URL_LOCAL}#/ud/${ud}/guia`); await m.waitForSelector("#sec-1");
+    await m.$$eval("details[id^=sec-]", ds => ds.forEach(d => { d.open = true; }));
+    const anchas = await m.evaluate(() => [...document.querySelectorAll("details[id^=sec-]")]
+      .filter(d => d.scrollWidth > d.clientWidth + 1 || d.getBoundingClientRect().right > innerWidth + 1).map(d => d.id));
+    if (anchas.length || await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal(`móvil: la guía de ${ud} se sale de la pantalla (${anchas.join(", ") || "página"}, de ${n} secciones)`);
+  }
+  await m.setViewportSize({ width: 390, height: 844 });
+  await m.goto(URL_LOCAL); await m.waitForSelector(".barra-prog");
 
   // Test de un tema concreto: solo el apartado 2, todas sus preguntas.
   await m.click('a[data-nav="test"]'); await m.click('a.card[href="#/test/tsf"]'); await m.check('input[value="temas"]');
-  await m.click(".tema summary");
-  for (const c of await m.$$('input[name="sec"]')) if ((await c.getAttribute("value")) !== "tsf-ud5#2") await c.uncheck();
+  // Varias unidades: se desmarcan enteras las demás y, de la UD5, se deja solo el apartado 2.
+  for (const u of await m.$$("input[data-ud]")) if ((await u.getAttribute("data-ud")) !== "tsf-ud5") await u.uncheck();
+  if (await m.$('input[name="sec"][data-de="tsf-ud3"]:checked')) mal("Test por temas: desmarcar una unidad no desmarca sus apartados");
+  await m.click('.tema:has(input[data-ud="tsf-ud5"]) summary');
+  for (const c of await m.$$('input[name="sec"][data-de="tsf-ud5"]')) if ((await c.getAttribute("value")) !== "tsf-ud5#2") await c.uncheck();
   await m.check('.segmentado input[value="0"]', { force: true }); await m.click("#empezar");
   const secciones = new Set();
   for (;;) {
-    secciones.add(await m.evaluate(() => __actual.q.seccion));
+    secciones.add(await m.evaluate(() => __actual.q.id.split("-")[0] + "#" + __actual.q.seccion));
     await responder(m, true);
     const ultima = (await m.textContent("#sig")).includes("resultado"); await m.click("#sig"); if (ultima) break;
   }
-  if ([...secciones].join() !== "2") mal("Test por temas: salen preguntas de los apartados " + [...secciones]);
+  if ([...secciones].join() !== "tsf5#2") mal("Test por temas: salen preguntas de " + [...secciones].join(", ") + " (solo debía salir tsf5#2)");
   if (!(await m.$("#otra"))) mal("Test: falta «Otra ronda» en el resultado");
 
   // Examen: cronómetro y sin corrección por pregunta.
