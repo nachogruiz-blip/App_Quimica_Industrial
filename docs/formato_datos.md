@@ -22,6 +22,8 @@ que falta) gracias a `jsconfig.json`, y la CI lo comprueba con `npx tsc -p jscon
 
 ## Guía (`guia[]`)
 - `apuntes`: dónde está ese contenido en los apuntes de clase (apartado y páginas del PDF; solo la referencia, nunca texto copiado).
+  Si la unidad no tiene apuntes de teoría, dilo y remite a los problemas de la relación; si la sección es ampliación, dilo
+  también (ver `docs/flujo_trabajo.md`, paso 3).
   Se muestra en la guía y en «Dónde estudiarlo» de cada pregunta de esa sección.
 - Una sección por apartado del PDF, en el mismo orden. Al final: «Método para resolver problemas» y «Formulario».
 - Clases HTML disponibles:
@@ -29,6 +31,9 @@ que falta) gracias a `jsconfig.json`, y la CI lo comprueba con `npx tsc -p jscon
   - `<p class="clave"><b>Idea clave:</b> …</p>` lo imprescindible.
   - `<span class="formula en-linea">…</span>` fórmula dentro de un párrafo.
   - `<table class="tabla">`, `<h4>`, `<ul>/<ol>`, `<details><summary>` desplegables.
+- **Pensar en el móvil** (la mayoría estudia en el teléfono): tablas de 2–3 columnas como mucho y con textos cortos.
+  Una comparación con mucho texto (p. ej. dos tipos de bomba con principio, caudal, uso y cuidado) se lee mejor como
+  `<h4>` + `<ul>` por cada tipo. Las tablas que aun así no caben se desplazan de lado dentro de su recuadro, pero es incómodo.
 - **Sin `style="…"` ni atributos `on…`**: la CSP los bloquea en Cloudflare (el test lo comprueba). Usa las clases de arriba
   o añade una en `css/estilos.css`.
 
