@@ -15,16 +15,19 @@ module.exports = async ctx => {
 
   // Test de un tema concreto: solo el apartado 2, todas sus preguntas.
   await m.click('a[data-nav="test"]'); await m.click('a.card[href="#/test/tsf"]'); await m.check('input[value="temas"]');
-  await m.click(".tema summary");
-  for (const c of await m.$$('input[name="sec"]')) if ((await c.getAttribute("value")) !== "tsf-ud5#2") await c.uncheck();
+  // Varias unidades: se desmarcan enteras las demás y, de la UD5, se deja solo el apartado 2.
+  for (const u of await m.$$("input[data-ud]")) if ((await u.getAttribute("data-ud")) !== "tsf-ud5") await u.uncheck();
+  if (await m.$('input[name="sec"][data-de="tsf-ud3"]:checked')) mal("Test por temas: desmarcar una unidad no desmarca sus apartados");
+  await m.click('.tema:has(input[data-ud="tsf-ud5"]) summary');
+  for (const c of await m.$$('input[name="sec"][data-de="tsf-ud5"]')) if ((await c.getAttribute("value")) !== "tsf-ud5#2") await c.uncheck();
   await m.check('.segmentado input[value="0"]', { force: true }); await m.click("#empezar");
   const secciones = new Set();
   for (;;) {
-    secciones.add(await m.evaluate(() => __actual.q.seccion));
+    secciones.add(await m.evaluate(() => __actual.q.id.split("-")[0] + "#" + __actual.q.seccion));
     await responder(m, true);
     const ultima = (await m.textContent("#sig")).includes("resultado"); await m.click("#sig"); if (ultima) break;
   }
-  if ([...secciones].join() !== "2") mal("Test por temas: salen preguntas de los apartados " + [...secciones]);
+  if ([...secciones].join() !== "tsf5#2") mal("Test por temas: salen preguntas de " + [...secciones].join(", ") + " (solo debía salir tsf5#2)");
   if (!(await m.$("#otra"))) mal("Test: falta «Otra ronda» en el resultado");
 
   // Examen: cronómetro y sin corrección por pregunta.
