@@ -118,7 +118,7 @@ registrarUD({
       unidad: "m/s", tolerancia: 0.02,
       explicacion: v => `Q = ${fmt(v.Q / 1000)} m³/s; A = π·${fmt(v.D / 100)}²/4 = ${fmt(area(v.D / 100))} m².<br>v = Q/A = <b>${fmt((v.Q / 1000) / area(v.D / 100))} m/s</b>.` },
     { id: "tsf4-n2", tipo: "numerica", seccion: 1,
-      variables: { v1: [0.5, 4, 0.1], D1: [4, 20, 1], D2: [1, 3.5, 0.5] },
+      variables: { v1: [0.5, 2.5, 0.1], D1: [3, 6, 0.5], D2: [1.5, 2.5, 0.5] },
       enunciado: "Por una manguera de {D1} cm de diámetro sale agua a {v1} m/s hacia una boquilla de {D2} cm. ¿A qué velocidad sale el agua por la boquilla?",
       resolver: v => v.v1 * (v.D1 / v.D2) ** 2,
       unidad: "m/s", tolerancia: 0.02,
