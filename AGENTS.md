@@ -12,8 +12,8 @@ test. Todo el contenido y la documentación van en **español**. `CLAUDE.md` sol
 | Copias literales de los PDFs (necesita el repo de materiales al lado y `pdftotext`) | `node tests/derechos.js` |
 | Ver la app | abrir `index.html` en el navegador (`file://`, sin servidor) |
 
-La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada push y PR. Publicar = push a `main`:
-Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
+La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada push y PR. Publicar = fusionar el PR en
+`main` (cuando el usuario lo pida y la CI esté en verde): Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
 
 ## Arquitectura en breve
 - `index.html` carga scripts clásicos en orden: `js/utilidades.js` → `js/usuarios.js` → `datos/registro.js` →
