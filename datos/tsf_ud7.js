@@ -125,6 +125,35 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["Isotérmica", "La que menos trabajo necesita"],
+    ["Adiabática", "Sin intercambio de calor"],
+    ["Politrópica", "La compresión real"],
+    ["Espacio muerto", "Gas que se reexpande"],
+    ["Doble efecto", "Trabajan las dos caras del pistón"],
+    ["Compresor de tornillo", "Macho y hembra girando"],
+    ["Soplante de lóbulos", "Baja presión (menos de 2 bar)"],
+    ["Eyector", "Sin piezas móviles"],
+    ["Fluido motriz habitual", "Vapor de agua seco"],
+    ["Ventilador", "Mucho caudal a baja presión"],
+    ["Anillo líquido", "Buena bomba de vacío"],
+    ["Centrífugo", "Mejor con gases pesados"]
+  ],
+  pasos: [
+    { id: "tsf7-p1", titulo: "Ciclo de un compresor alternativo (desde la admisión)", pasos: [
+      "Admisión: se abre la válvula de admisión y entra gas",
+      "Compresión: con las dos válvulas cerradas",
+      "Expulsión: se abre la válvula de descarga",
+      "Retroceso: se reexpande el gas del espacio muerto"
+    ] },
+    { id: "tsf7-p2", titulo: "Recorrido del gas en un eyector", pasos: [
+      "El fluido motriz se acelera en la tobera",
+      "En la cámara de succión arrastra al gas aspirado",
+      "La mezcla se frena en el difusor",
+      "La velocidad se convierte en presión"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales ----------
     { id: "tsf7-1", tipo: "test", seccion: 1,

@@ -143,6 +143,48 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["Molaridad", "mol de soluto / L de disolución"],
+    ["Molalidad", "mol de soluto / kg de disolvente"],
+    ["Normalidad", "N = M · valencia"],
+    ["n = m/Pm", "Número de moles"],
+    ["C₁·V₁ = C₂·V₂", "Dilución"],
+    ["N<sub>a</sub>·V<sub>a</sub> = N<sub>b</sub>·V<sub>b</sub>", "Punto de equivalencia"],
+    ["Fenolftaleína", "Rosa en medio básico"],
+    ["Patrón primario", "Puro, estable, no higroscópico"],
+    ["FAP", "Patrón para normalizar bases"],
+    ["f = N<sub>real</sub>/N<sub>nominal</sub>", "Factor de una disolución"],
+    ["M = 10·%·d/Pm", "De riqueza y densidad a M"],
+    ["Ácido sobre agua", "Nunca al revés"],
+    ["% en masa", "g de soluto en 100 g de disolución"]
+  ],
+  pasos: [
+    { id: "fpm4-p1", titulo: "Preparar una disolución a partir de un sólido", pasos: [
+      "Calcular los moles: n = M·V(L)",
+      "Pasar a masa: m = n·Pm (y corregir la riqueza si no es pura)",
+      "Pesar el sólido",
+      "Disolverlo en parte del agua",
+      "Pasarlo al matraz aforado",
+      "Enrasar con agua"
+    ] },
+    { id: "fpm4-p2", titulo: "Hacer una valoración ácido-base", pasos: [
+      "Tomar la alícuota con pipeta y pasarla al erlenmeyer",
+      "Añadir unas gotas de indicador",
+      "Añadir valorante desde la bureta hasta que vire el indicador",
+      "Anotar el volumen gastado",
+      "Repetir por triplicado y hacer la media",
+      "Calcular con N<sub>a</sub>·V<sub>a</sub> = N<sub>b</sub>·V<sub>b</sub>"
+    ] },
+    { id: "fpm4-p3", titulo: "Diluir un ácido comercial concentrado", pasos: [
+      "Calcular los moles que necesitas: n = M·V(L)",
+      "Pasar a gramos de soluto con la masa molar",
+      "Con la riqueza y la densidad, calcular el volumen de ácido",
+      "Medir ese volumen de ácido con pipeta",
+      "Añadirlo poco a poco sobre agua ya puesta en el matraz",
+      "Enrasar con agua"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales ----------
     { id: "fpm4-1", tipo: "test", seccion: 1,

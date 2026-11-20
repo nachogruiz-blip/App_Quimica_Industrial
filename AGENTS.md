@@ -17,8 +17,9 @@ La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada 
 
 ## Arquitectura en breve
 - `index.html` carga scripts clásicos en orden: `js/utilidades.js` → `js/usuarios.js` → `datos/registro.js` →
-  `datos/novedades.js` → `datos/<modulo>_udN.js` → `js/app.js`. No hay módulos ES ni `fetch` de datos: con `file://` no funcionan.
-- `js/app.js`: router por hash y vistas (Estudio, Examen, Test, Ajustes). `js/usuarios.js`: perfiles locales y progreso
+  `datos/novedades.js` → `datos/<modulo>_udN.js` → `js/juegos.js` → `js/app.js`. No hay módulos ES ni `fetch` de datos: con `file://` no funcionan.
+- `js/app.js`: router por hash y vistas (Estudio, Examen, Test, Juegos, Ajustes). `js/juegos.js`: minijuegos; **no**
+  llaman a `anotar()` (no cuentan en el progreso) y guardan récords aparte (`qi-juegos-v1:<usuario>`). `js/usuarios.js`: perfiles locales y progreso
   en `localStorage`. `worker.mjs`: en Cloudflare pide usuario y contraseña (hashes PBKDF2 en el secreto `USUARIOS`, límite de
   intentos por IP) y pone las cabeceras de seguridad (CSP incluida). `herramientas/generar_usuario.html` genera las
   líneas de `USUARIOS`.
@@ -38,6 +39,7 @@ La CI (`.github/workflows/comprobar.yml`) ejecuta los tests y los tipos en cada 
   general y `apuntes` que remite a los ejercicios; lo que no viene en los apuntes se marca como ampliación
   (`docs/flujo_trabajo.md`, paso 3).
 - **IDs de pregunta estables** (`tsf5-12`, `tsf5-n3`): nunca renumerar ni reutilizar; el progreso se guarda por ID.
+  Igual con los ids de `pasos` (`tsf5-p1`): el récord del juego se guarda por id.
 - Cada pregunta lleva `explicacion` y `seccion`; las numéricas, el desarrollo con los valores concretos. Cada sección de
   la guía lleva `apuntes` (dónde está en los apuntes) para «Dónde estudiarlo».
 - **Novedades**: todo cambio que note el usuario (unidad nueva, función nueva, cambio de uso) añade una entrada AL

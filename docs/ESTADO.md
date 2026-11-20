@@ -10,7 +10,7 @@ privado de materiales, archivo `CONTEXTO_PRIVADO.md`: no lo copies aquí.
 A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio, explicaciones y banco de preguntas.
 
 ## Hecho
-- [x] Motor de la app (`js/app.js`): menú de 4 secciones **Estudio · Examen · Test · Ajustes** (barra inferior fija en
+- [x] Motor de la app (`js/app.js`): menú de 5 secciones **Estudio · Examen · Test · Juegos · Ajustes** (barra inferior fija en
   móvil ≤ 700 px, en la cabecera en pantallas anchas). Examen y Test: asignatura → aleatorias o temas (unidades y
   apartados) → nº de preguntas (10/20/30/todas); Test con «solo falladas»; Examen con cronómetro; resultado con «Otra
   ronda» y «Repetir las falladas». Ajustes: tema automático/día/noche, exportar/importar/borrar progreso, cerrar sesión.
@@ -53,6 +53,13 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
   negativas; tsf4-n2 hasta 1600 m/s; tsf3-n9 densidades de hasta 40 g/cm³; mei4-n20 podía dar 0 A; fpm4-n6/n7
   con riqueza y densidad incoherentes; fpm4-n12/n13 con HCl de más del 38 %). fpm4-n39: el error relativo
   se divide ahora entre el valor verdadero (la concentración medida), como define fpm4-33; antes, entre el de la etiqueta.
+
+- [x] **Juegos** (2026-11-20, `js/juegos.js`): sección 🎮 entre Test y Ajustes con 6 minijuegos: Contrarreloj (60 s,
+  −5 s por fallo), Supervivencia (3 vidas), Reto rápido (10 casos generados con 20 s cada uno: TSF régimen/continuidad/
+  hidrostática, MEI asociación/Ohm/potencia, FPM molaridad/dilución/punto de equivalencia), Conversión de unidades (60 s),
+  Parejas (memory de 6 pares, `parejas` de cada UD) y Ordena los pasos (`pasos` de cada UD, 13 procedimientos). Los fallos
+  no cuentan en el progreso ni en «solo falladas»; récords por usuario en `qi-juegos-v1:<usuario>` (no se exportan con el
+  progreso). Test: `tests/partes/juegos.js`.
 
 ## Pendiente (en orden)
 1. [ ] **El usuario revisa el contenido** (TSF, MEI y FPM; empezó por TSF UD5) → aplicar sus correcciones y anotar las preferencias en «Decisiones».
@@ -111,6 +118,7 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | Unidades sin apuntes de teoría (solo ejercicios): guía con teoría general, marcada en `apuntes` | Decidido por el usuario (2026-11-20), para FPM y aplicado también a TSF UD3, UD4 y UD6 |
 | Estilo: paleta lila (acento #6d4fc2 día / #b9a4f5 noche, tonos `--lila-2`, `--lila-3`); verde/rojo solo para acierto/fallo | Decidido por el usuario (2026-11-19) |
 | Emoticonos: menú 🔬 ⏱️ 🧪 ⚙️; asignaturas con `icono` en `datos/registro.js` (💧 TSF, ⚡ MEI, ⚗️ FPM) | Decidido por el usuario |
+| Juegos: los fallos no cuentan en el progreso ni en «solo falladas»; pestaña «Juegos» justo antes de Ajustes | Decidido por el usuario (2026-11-20) |
 | Notación de los apuntes: g = 9,8; Re 2000/4000; «4f» = factor de Darcy; h_f = 4f(L/D)v²/2g | Coherencia con clase |
 | Turbulento: 4f por Colebrook y tolerancia 10 % | En clase se lee el diagrama de Moody; las soluciones de los ejercicios difieren hasta ~12 % de Colebrook |
 | Longitudes equivalentes: se dan en el enunciado | La tabla de L_eq no está en los apuntes |

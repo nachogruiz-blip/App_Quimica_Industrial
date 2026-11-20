@@ -110,6 +110,28 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["P = F/S", "Definición de presión"],
+    ["1 atm", "760 mmHg"],
+    ["1 bar", "100 000 Pa"],
+    ["1 mmHg", "≈ 133,3 Pa"],
+    ["P = ρ·g·h", "Presión hidrostática"],
+    ["P<sub>abs</sub>", "P<sub>atm</sub> + ρ·g·h"],
+    ["ρ₁·h₁ = ρ₂·h₂", "Tubo en U con dos líquidos"],
+    ["F₁/S₁ = F₂/S₂", "Prensa hidráulica"],
+    ["E = ρ<sub>f</sub>·g·V<sub>sum</sub>", "Empuje de Arquímedes"],
+    ["P − E", "Peso aparente"],
+    ["V<sub>sum</sub>/V = ρ<sub>c</sub>/ρ<sub>l</sub>", "Fracción sumergida al flotar"]
+  ],
+  pasos: [
+    { id: "tsf3-p1", titulo: "Fuerza en una prensa hidráulica", pasos: [
+      "Calcular la superficie de cada émbolo",
+      "Presión en el émbolo pequeño: P = F₁/S₁",
+      "Esa misma presión llega al émbolo grande (Pascal)",
+      "Fuerza en el émbolo grande: F₂ = P·S₂"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales ----------
     { id: "tsf3-1", tipo: "test", seccion: 1,

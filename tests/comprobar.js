@@ -6,13 +6,14 @@
 //   estructura   archivos: sin PDFs en git, sin recursos externos ni código dinámico, unidades enlazadas en index.html
 //   respuestas   responde en el navegador todas las preguntas de cada UD (100 % de aciertos y «Explicación»)
 //   navegacion   móvil: menú, Test por temas, Examen con cronómetro, diálogo de abandonar ronda, Ajustes
+//   juegos       datos y generadores de los juegos; una partida de cada uno; no tocan el progreso; récords
 //   cloudflare   modo Cloudflare con las cabeceras reales del worker (CSP sin 'unsafe-inline'), manifest
 //   worker       control de acceso de worker.mjs y cabeceras en todas las respuestas
 // El azar de la app (Math.random) sale de una semilla: si algo falla, SEMILLA=<n> node tests/comprobar.js lo repite.
 const { chromium } = require("playwright");
 const { nuevoContexto } = require("./partes/comun");
 
-const PARTES = ["login", "datos", "estructura", "respuestas", "navegacion", "cloudflare", "worker"];
+const PARTES = ["login", "datos", "estructura", "respuestas", "navegacion", "juegos", "cloudflare", "worker"];
 
 (async () => {
   const semilla = Number(process.env.SEMILLA) || Math.floor(Math.random() * 1e9);

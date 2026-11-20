@@ -3,6 +3,16 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-20-6",
+    titulo: "Nueva sección: 🎮 Juegos",
+    puntos: [
+      "Seis minijuegos para practicar: Contrarreloj, Supervivencia (3 vidas), Reto rápido con datos nuevos cada vez, Conversión de unidades, Parejas y Ordena los pasos.",
+      "Los encontrarás en el menú, en «Juegos», justo antes de Ajustes.",
+      "Los fallos de los juegos no cuentan en tu progreso ni en «solo las que he fallado»: practica sin miedo.",
+      "Cada juego guarda tu récord, por asignatura y por unidad."
+    ]
+  },
+  {
     id: "2026-11-20-5",
     titulo: "Preguntas revisadas",
     puntos: [

@@ -1,4 +1,4 @@
-// Móvil: menú de 4 secciones abajo, Test por temas, Examen con cronómetro, diálogo al abandonar una ronda, Ajustes.
+// Móvil: menú de 5 secciones abajo, Test por temas, Examen con cronómetro, diálogo al abandonar una ronda, Ajustes.
 const { URL_LOCAL, cerrarNovedades, responder } = require("./comun");
 
 module.exports = async ctx => {
@@ -8,7 +8,7 @@ module.exports = async ctx => {
   await cerrarNovedades(m);
 
   const nav = await m.$$eval(".nav-principal a", as => as.map(a => a.lastChild.textContent.trim()));
-  if (nav.join(",") !== "Estudio,Examen,Test,Ajustes") mal("navegación: pestañas «" + nav.join(",") + "», se esperaban Estudio, Examen, Test y Ajustes");
+  if (nav.join(",") !== "Estudio,Examen,Test,Juegos,Ajustes") mal("navegación: pestañas «" + nav.join(",") + "», se esperaban Estudio, Examen, Test, Juegos y Ajustes");
   const abajo = await m.$eval(".nav-principal", n => getComputedStyle(n).position === "fixed" && Math.abs(n.getBoundingClientRect().bottom - innerHeight) < 2);
   if (!abajo) mal("navegación: en el móvil la barra no está fija abajo");
   if (await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal("móvil: la página se desborda a lo ancho");

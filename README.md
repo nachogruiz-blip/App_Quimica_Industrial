@@ -16,10 +16,12 @@ App de estudio para asignaturas del Grado Superior de Química Industrial: **gu�
 - Online con acceso solo para personas autorizadas (usuario y contraseña): Cloudflare Workers, ver
   [`docs/despliegue_cloudflare.md`](docs/despliegue_cloudflare.md).
 
-Menú con cuatro secciones (en el móvil, botones en la parte inferior; en el ordenador, en la barra de arriba):
+Menú con cinco secciones (en el móvil, botones en la parte inferior; en el ordenador, en la barra de arriba):
 - **Estudio**: asignatura → unidad → guía de estudio.
 - **Examen**: asignatura → preguntas aleatorias o de temas/apartados elegidos → nota y tiempo al final.
 - **Test**: igual, pero corrige y explica cada pregunta; opción «solo las que he fallado».
+- **Juegos**: Contrarreloj, Supervivencia, Reto rápido (casos con datos nuevos), Conversión de unidades, Parejas y Ordena
+  los pasos. No cuentan en el progreso ni en «solo las que he fallado»; cada juego guarda el récord.
 - **Ajustes**: modo día/noche, exportar/importar progreso, cerrar sesión, novedades.
 
 En Cloudflare se entra con el usuario y la contraseña del secreto `USUARIOS`. Abriendo `index.html` en local se crea un
@@ -45,12 +47,13 @@ jsconfig.json       comprobación de tipos de los datos (editor y CI), con tipos
 manifest.webmanifest datos para instalar la app en el móvil (PWA)
 iconos/             icono de la app (SVG propio y PNG generados a partir de él)
 css/estilos.css     estilos (claro/oscuro)
-js/app.js           motor: menú (Estudio, Examen, Test, Ajustes), guía, rondas de preguntas, progreso
+js/app.js           motor: menú (Estudio, Examen, Test, Juegos, Ajustes), guía, rondas de preguntas, progreso
+js/juegos.js        minijuegos (sección Juegos), sus generadores de casos y los récords
 js/utilidades.js    funciones de cálculo compartidas (Reynolds, 4f, …)
 js/usuarios.js      login local (usuario/contraseña con hash), progreso por usuario, importar
 datos/registro.js   módulos y registro de unidades
 datos/novedades.js  novedades que se muestran al entrar (la más reciente primero)
-datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
+datos/<mod>_udN.js  contenido de cada unidad didáctica (guía, preguntas, parejas y pasos de los juegos)
 herramientas/       generar_usuario.html: genera las líneas (con hash) del secreto USUARIOS
 tests/comprobar.js  comprobación automática (node tests/comprobar.js); cada parte en tests/partes/
 tests/derechos.js   busca copias literales de los PDFs (node tests/derechos.js)
