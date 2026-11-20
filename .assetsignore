@@ -8,6 +8,10 @@ docs
 tests
 *.md
 *.pdf
+*.d.ts
+jsconfig.json
+.editorconfig
+.gitattributes
 .gitignore
 .assetsignore
 wrangler.jsonc

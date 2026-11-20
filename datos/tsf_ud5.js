@@ -43,7 +43,7 @@ registrarUD({
           <tr><td>2000 – 4000</td><td>Transición</td><td>Inestable</td></tr>
           <tr><td>&gt; 4000</td><td>Turbulento</td><td>Remolinos; pérdidas ∝ v², mucho mayores</td></tr>
         </table>
-        <p><b>Velocidad crítica</b> (Re = 2000): <span class="formula" style="display:inline-block">v<sub>c</sub> = 2000 · μ / (ρ · D)</span></p>
+        <p><b>Velocidad crítica</b> (Re = 2000): <span class="formula en-linea">v<sub>c</sub> = 2000 · μ / (ρ · D)</span></p>
         <p><b>Conducciones no circulares</b>: se usa el <b>diámetro hidráulico</b></p>
         <div class="formula">D<sub>H</sub> = 4 · A / P<sub>m</sub></div>
         <p>(A sección de paso, P<sub>m</sub> perímetro mojado). Rectángulo a×b lleno: D<sub>H</sub> = 2ab/(a+b).</p>

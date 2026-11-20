@@ -18,11 +18,11 @@ Objetivo: que **solo las personas que tú autorices** puedan abrir la app, y que
 ## 2. Publicar la app (Cloudflare Workers con archivos estáticos)
 Está hecho así (noviembre de 2026): *Workers & Pages → Create → Import a repository* con el repo `App_Quimica_Industrial`.
 Cloudflare ejecuta `npx wrangler deploy` en cada push a `main`. La configuración está en el repo:
-- `worker.mjs`: pide usuario y contraseña antes de servir nada (ver paso 3).
+- `worker.mjs`: pide usuario y contraseña antes de servir nada (ver paso 3) y pone las cabeceras de seguridad (CSP sin
+  `'unsafe-inline'`, etc.) en todas las respuestas. Es la única fuente de cabeceras: no hay archivo `_headers`.
 - `wrangler.jsonc`: nombre `app-quimica-industrial`, ejecuta `worker.mjs` antes que los archivos, sirve la carpeta raíz y **sin URLs de vista previa**
   (`preview_urls: false`), para que solo haya una dirección que proteger.
 - `.assetsignore`: solo se publican `index.html`, `manifest.webmanifest`, `css/`, `js/`, `datos/` e `iconos/`. Ni `docs/`, ni `tests/`, ni `*.md`, ni `.git`.
-- `_headers`: cabeceras de seguridad (CSP, etc.).
 
 Dirección: `https://app-quimica-industrial.<subdominio>.workers.dev`.
 **Privacidad:** el `<subdominio>` es el de la cuenta y por defecto lleva el nombre de usuario. Cámbialo por uno neutro en

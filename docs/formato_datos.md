@@ -17,6 +17,9 @@ registrarUD({
 Añade `<script src="datos/<modulo>_udN.js"></script>` en `index.html` después de `registro.js` y antes de `app.js`.
 Un módulo nuevo se añade a `MODULOS` en `datos/registro.js`.
 
+**Tipos**: el esquema está también en `tipos.d.ts`. VS Code marca los errores al editar (p. ej. `tipo: "tset"` o un campo
+que falta) gracias a `jsconfig.json`, y la CI lo comprueba con `npx tsc -p jsconfig.json`.
+
 ## Guía (`guia[]`)
 - `apuntes`: dónde está ese contenido en los apuntes de clase (apartado y páginas del PDF; solo la referencia, nunca texto copiado).
   Se muestra en la guía y en «Dónde estudiarlo» de cada pregunta de esa sección.
@@ -24,7 +27,10 @@ Un módulo nuevo se añade a `MODULOS` en `datos/registro.js`.
 - Clases HTML disponibles:
   - `<div class="formula">…</div>` fórmula destacada (`<sub>`, `<sup>`, `·`, `Δ`, `√`…).
   - `<p class="clave"><b>Idea clave:</b> …</p>` lo imprescindible.
+  - `<span class="formula en-linea">…</span>` fórmula dentro de un párrafo.
   - `<table class="tabla">`, `<h4>`, `<ul>/<ol>`, `<details><summary>` desplegables.
+- **Sin `style="…"` ni atributos `on…`**: la CSP los bloquea en Cloudflare (el test lo comprueba). Usa las clases de arriba
+  o añade una en `css/estilos.css`.
 
 ## Preguntas (`preguntas[]`)
 Campos comunes: `id`, `tipo`, `seccion` (nº de sección de la guía, empieza en 1; **obligatorio**: alimenta «Dónde estudiarlo»),

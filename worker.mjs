@@ -8,11 +8,15 @@
 // Aceptar a alguien = añadir su línea; denegar = borrarla. Sin USUARIOS no entra nadie (falla cerrado).
 
 const REINO = "Quimica Industrial";
-const SEGURIDAD = {
-  "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+// Cabeceras de seguridad de TODAS las respuestas (única fuente: no hay archivo _headers). Sin 'unsafe-inline': la app no
+// usa style="" ni scripts en línea (lo comprueba tests/).
+export const SEGURIDAD = {
+  "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'; object-src 'none'",
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
   "Referrer-Policy": "no-referrer",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+  "Cross-Origin-Opener-Policy": "same-origin",
   "X-Robots-Tag": "noindex, nofollow",
   "Cache-Control": "private, no-store"
 };

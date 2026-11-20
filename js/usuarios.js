@@ -34,15 +34,19 @@ function sha256(texto) {
   return H.map(v => (v >>> 0).toString(16).padStart(8, "0")).join("");
 }
 
+// Iteraciones de PBKDF2-SHA256 por algoritmo guardado. «pbkdf2» (100 000) es el de los perfiles antiguos: se sigue
+// aceptando y se actualiza al entrar. Los nuevos usan 600 000 (recomendación actual de OWASP).
+const ITERACIONES = { "pbkdf2": 100000, "pbkdf2-600k": 600000 };
 async function hashClave(clave, sal, alg) {
-  if (alg === "pbkdf2") {
+  if (ITERACIONES[alg]) {
     const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(clave), "PBKDF2", false, ["deriveBits"]);
-    const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode(sal), iterations: 100000 }, k, 256);
+    const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: new TextEncoder().encode(sal), iterations: ITERACIONES[alg] }, k, 256);
     return Array.from(new Uint8Array(bits), x => x.toString(16).padStart(2, "0")).join("");
   }
   let h = sal + clave; for (let i = 0; i < 2000; i++) h = sha256(h + sal); return h;
 }
-const algDisponible = () => (window.crypto && crypto.subtle ? "pbkdf2" : "sha256x2000");
+// Respaldo sha256x2000: solo si no hay crypto.subtle (página servida por http sin cifrar, p. ej. una IP de la red local).
+const algDisponible = () => (window.crypto && crypto.subtle ? "pbkdf2-600k" : "sha256x2000");
 
 const normalizar = n => n.trim().toLowerCase();
 const nombreValido = n => /^[\p{L}\p{N}_.-]{2,30}$/u.test(n.trim());
@@ -93,9 +97,13 @@ async function registrar(nombre, clave) {
 }
 /** Comprueba usuario y contraseña. Devuelve el id o null. */
 async function entrar(nombre, clave) {
-  const u = almacen.leer(USUARIOS, {})[normalizar(nombre)];
-  if (!u) return null;
-  return (await hashClave(clave, u.sal, u.alg)) === u.hash ? normalizar(nombre) : null;
+  const lista = almacen.leer(USUARIOS, {}), id = normalizar(nombre), u = lista[id];
+  if (!u || (await hashClave(clave, u.sal, u.alg)) !== u.hash) return null;
+  const alg = algDisponible();
+  if (u.alg !== alg && alg !== "sha256x2000") { // perfil con un hash más débil: se rehace con el actual
+    lista[id] = { ...u, alg, hash: await hashClave(clave, u.sal, alg) }; almacen.escribir(USUARIOS, lista);
+  }
+  return id;
 }
 
 // Progreso del usuario con sesión abierta
