@@ -568,10 +568,10 @@ registrarUD({
     { id: "fpm4-n39", tipo: "numerica", seccion: 6,
       variables: { Mb: [0.045, 0.055, 0.0005], Vb: [9, 13, 0.1] },
       enunciado: "Un HCl etiquetado al 37 % y d = 1,19 g/mL (Pm = 36,5) debería ser 12,06 M. Tras diluir 2 mL → 50 mL y 10 mL → 150 mL, 20 mL gastan {Vb} mL de NaOH {Mb} M. ¿Cuál es el error relativo de la etiqueta, en %?",
-      resolver: v => Math.abs(v.Mb * v.Vb / 20 * 375 - 12.06) / 12.06 * 100,
+      resolver: v => Math.abs(v.Mb * v.Vb / 20 * 375 - 12.06) / (v.Mb * v.Vb / 20 * 375) * 100,
       unidad: "%", tolerancia: 0.02, toleranciaAbs: 0.3,
       explicacion: v => { const c = v.Mb * v.Vb / 20 * 375, ea = Math.abs(c - 12.06);
-        return `Concentración real: ${fmt(v.Mb)}·${fmt(v.Vb)}/20·375 = ${fmt(c)} M (nominal: 10·37·1,19/36,5 = 12,06 M).<br>Error absoluto = |${fmt(c)} − 12,06| = ${fmt(ea)} M. Error relativo = ${fmt(ea)}/12,06·100 = <b>${fmt(ea / 12.06 * 100)} %</b>.`; } },
+        return `Concentración real: ${fmt(v.Mb)}·${fmt(v.Vb)}/20·375 = ${fmt(c)} M (nominal: 10·37·1,19/36,5 = 12,06 M).<br>Error absoluto = |${fmt(c)} − 12,06| = ${fmt(ea)} M. Error relativo (entre el valor verdadero, el medido) = ${fmt(ea)}/${fmt(c)}·100 = <b>${fmt(ea / c * 100)} %</b>.`; } },
     { id: "fpm4-n40", tipo: "numerica", seccion: 6,
       variables: { V: [15, 22, 1], M: [0.05, 0.2, 0.01] },
       enunciado: "Se normaliza una NaOH {M} M con ácido benzoico (monoprótico, Pm = 122 g/mol). ¿Cuántos mg de ácido benzoico hay que pesar para gastar unos {V} mL de NaOH?",
