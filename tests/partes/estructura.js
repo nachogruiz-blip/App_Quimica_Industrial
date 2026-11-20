@@ -35,7 +35,7 @@ module.exports = async ctx => {
 
   // Lo que no se publica en Cloudflare.
   const ignorados = leer(".assetsignore").split("\n");
-  for (const f of ["worker.mjs", "docs", "tests", "*.md", ".git", ".github", "jsconfig.json", "*.d.ts", ".editorconfig", ".gitattributes"])
+  for (const f of ["worker.mjs", "docs", "tests", "herramientas", "*.md", ".git", ".github", "jsconfig.json", "*.d.ts", ".editorconfig", ".gitattributes"])
     if (!ignorados.includes(f)) mal(`seguridad: .assetsignore no excluye ${f}`);
   if (fs.existsSync(path.join(RAIZ, "_headers"))) mal("seguridad: las cabeceras van solo en worker.mjs (SEGURIDAD), no en _headers");
 

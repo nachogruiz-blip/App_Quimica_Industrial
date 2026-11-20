@@ -52,14 +52,11 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
    renderizándolo con Playwright). El manifest se enlaza desde `js/app.js` solo en http(s). `worker.mjs` sirve sin
    contraseña solo esas rutas exactas (`PUBLICOS`). Ajustes → «Instalar como app» (botón en Chrome/Android e instrucciones).
    Sin service worker: no funciona sin conexión (decisión pendiente si el usuario lo pide).
-9. [ ] **Decisiones del usuario** que quedaron fuera de la profesionalización (2026-11-20):
-   - Licencia (`LICENSE`): sin ella el repo es «todos los derechos reservados». Propuesta: MIT para el código y
-     CC BY-NC-SA 4.0 para `datos/`.
-   - `package.json` solo de desarrollo con Prettier + ESLint (formatear el código, hoy con líneas muy densas). Choca con la
-     regla «sin dependencias», aunque la app seguiría sin ellas.
-   - Secreto `USUARIOS` con hashes en vez de contraseñas en claro y regla de *rate limiting* en Cloudflare (panel).
-   - Service worker para usar la app sin conexión.
-   - Nombre de autor de los commits (`git config user.name`).
+9. [x] Decisiones del usuario tras la profesionalización (2026-11-20): **sin licencia**; autor de los commits = alias
+   `patatasss`; secreto `USUARIOS` con hashes (`herramientas/generar_usuario.html`) y límite de intentos
+   (`LIMITE_INTENTOS`, 20/min por IP). Descartados por ahora: `package.json` con Prettier/ESLint y service worker.
+10. [ ] **Lo hace el usuario**: cambiar las líneas en claro del secreto `USUARIOS` por líneas con hash (paso 3 de
+    `docs/despliegue_cloudflare.md`). Mientras tanto el worker sigue aceptando las antiguas.
 
 ## Inventario de materiales (repo privado `App_Quimica_Industrial_materials`)
 | Archivo | Módulo | Contenido | Usado en |
@@ -86,6 +83,9 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 | PDFs en repo privado aparte; este repo público | Posibles derechos de autor (`docs/derechos_autor.md`) |
 | Progreso en `localStorage`, por usuario | Sin servidor; se pasa entre dispositivos exportando/importando un `.json` |
 | Login local = perfiles locales (no cuentas en la nube) | Decidido por el usuario. Solo se usa abriendo `index.html` en local y separa el progreso de cada persona en un mismo navegador; el contenido lo protege `worker.mjs` en Cloudflare |
+| Contraseñas de `USUARIOS` como hash PBKDF2-SHA256 (10 000 iteraciones) + límite de intentos por IP | Decidido por el usuario (2026-11-20). Pocas iteraciones por el límite de CPU del plan gratuito (10 ms); compensado con contraseñas de ≥ 12 caracteres y el límite de intentos |
+| Sin licencia | Decidido por el usuario (2026-11-20): todos los derechos reservados |
+| Autor de los commits: alias `patatasss` | Decidido por el usuario (2026-11-20): nada de nombres reales en el repo |
 | Nada del centro ni de personas en el repo público | Decidido por el usuario; contexto privado en el repo de materiales |
 | Tres módulos: TSF (0190), MEI (0191), FPM | Decidido por el usuario; ids en `datos/registro.js` |
 | Prioridad inicial: UD4, UD5, UD7; se empezó por TSF UD5 | Decidido por el usuario |

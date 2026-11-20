@@ -7,5 +7,10 @@
   "assets": { "directory": ".", "binding": "ASSETS", "run_worker_first": true },
   "workers_dev": true,
   // Sin URLs de vista previa: así solo hay una dirección que proteger.
-  "preview_urls": false
+  "preview_urls": false,
+  // Límite de intentos de contraseña: 20 comprobaciones por minuto y por IP (worker.mjs). Las credenciales ya
+  // comprobadas no cuentan. El contador es por centro de datos de Cloudflare: es un freno, no un tope exacto.
+  "ratelimits": [
+    { "name": "LIMITE_INTENTOS", "namespace_id": "7101", "simple": { "limit": 20, "period": 60 } }
+  ]
 }

@@ -19,7 +19,9 @@ Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
 - `index.html` carga scripts clásicos en orden: `js/utilidades.js` → `js/usuarios.js` → `datos/registro.js` →
   `datos/novedades.js` → `datos/<modulo>_udN.js` → `js/app.js`. No hay módulos ES ni `fetch` de datos: con `file://` no funcionan.
 - `js/app.js`: router por hash y vistas (Estudio, Examen, Test, Ajustes). `js/usuarios.js`: perfiles locales y progreso
-  en `localStorage`. `worker.mjs`: en Cloudflare pide usuario y contraseña y pone las cabeceras de seguridad (CSP incluida).
+  en `localStorage`. `worker.mjs`: en Cloudflare pide usuario y contraseña (hashes PBKDF2 en el secreto `USUARIOS`, límite de
+  intentos por IP) y pone las cabeceras de seguridad (CSP incluida). `herramientas/generar_usuario.html` genera las
+  líneas de `USUARIOS`.
 - Tipos de los datos en `tipos.d.ts` (comprobados con `jsconfig.json`); esquema explicado en `docs/formato_datos.md`.
 
 ## Antes de empezar
@@ -41,7 +43,10 @@ Cloudflare despliega solo (`docs/despliegue_cloudflare.md`).
   entrada es también la «versión» que se ve en Ajustes.
 - Estilo de código: el de `.editorconfig` (2 espacios, LF, UTF-8). Comentarios y nombres en español.
 - **Git**: trabaja en la rama que indique la sesión (si no indica ninguna, crea una) y avisa al usuario; `main` despliega
-  en producción. Commits en español, en imperativo y con una línea de resumen clara.
+  en producción. Commits en español, en imperativo y con una línea de resumen clara. Autor de los commits: el alias
+  neutro `patatasss` (`git config user.name patatasss && git config user.email patatasss@noreply.invalid`), nunca un
+  nombre o correo reales.
+- **Sin licencia** (decisión del usuario): no añadas `LICENSE` ni avisos de licencia.
 
 ## Lista antes de cada commit
 Trata este repo como **público**: aunque sea privado y la app se sirva con contraseña, puede volver a abrirse.
@@ -63,7 +68,7 @@ Trata este repo como **público**: aunque sea privado y la app se sirva con cont
   Separa el progreso de cada persona; no es la protección del contenido (esa es `worker.mjs`).
 - [ ] No tocar sin motivo `worker.mjs`, `.assetsignore` ni `wrangler.jsonc`: deciden qué se publica, quién entra y con
   qué cabeceras (única fuente: `SEGURIDAD` en `worker.mjs`). `worker.mjs` debe fallar cerrado: sin el secreto `USUARIOS`
-  no entra nadie. No activar GitHub Pages.
+  no entra nadie. Nunca escribas contraseñas ni líneas de `USUARIOS` reales en el repo. No activar GitHub Pages.
 
 **Derechos de autor**
 - [ ] Sin PDFs ni `materiales/` en `git ls-files` (lo comprueba el test).

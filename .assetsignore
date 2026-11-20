@@ -6,6 +6,7 @@ node_modules
 materiales
 docs
 tests
+herramientas
 *.md
 *.pdf
 *.d.ts

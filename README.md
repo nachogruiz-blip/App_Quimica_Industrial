@@ -51,6 +51,7 @@ js/usuarios.js      login local (usuario/contraseña con hash), progreso por usu
 datos/registro.js   módulos y registro de unidades
 datos/novedades.js  novedades que se muestran al entrar (la más reciente primero)
 datos/<mod>_udN.js  contenido de cada unidad didáctica (guía + preguntas)
+herramientas/       generar_usuario.html: genera las líneas (con hash) del secreto USUARIOS
 tests/comprobar.js  comprobación automática (node tests/comprobar.js); cada parte en tests/partes/
 tests/derechos.js   busca copias literales de los PDFs (node tests/derechos.js)
 docs/               documentación del proyecto (estado, formato, flujo, derechos, despliegue)
