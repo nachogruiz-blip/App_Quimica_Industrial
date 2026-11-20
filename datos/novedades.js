@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-20-4",
+    titulo: "Nueva asignatura: Formulación y preparación de mezclas",
+    puntos: [
+      "Ya está la UD4.1 de disoluciones y valoraciones: concentraciones, preparación, diluciones, mezclas, valoraciones y normalización.",
+      "Tiene 78 preguntas, 45 de ellas problemas con datos que cambian cada vez, como los de la relación de clase.",
+      "No hay apuntes de teoría de esta asignatura, así que la guía resume la química general que necesitas y te dice qué ejercicios practicar."
+    ]
+  },
+  {
     id: "2026-11-20-3",
     titulo: "Nueva asignatura: Mantenimiento electromecánico",
     puntos: [
