@@ -53,6 +53,18 @@ Al responder, la explicación sale en un desplegable «💡 Explicación» con �
 | `vf` | `correcta: true/false` | la explicación dice *por qué* |
 | `numerica` | `variables: {x:[min,max,paso]}`, `resolver: v => número`, `unidad`, `tolerancia` (relativa, por defecto 0.02), `toleranciaAbs` (opcional) | `{x}` en el enunciado se sustituye; `explicacion: v => html` con el desarrollo paso a paso |
 
+## Juegos (`parejas` y `pasos`, opcionales)
+Contenido de dos minijuegos de `js/juegos.js` (los demás usan las preguntas test/vf o generan los casos solos):
+```js
+parejas: [ ["Re = ρ·v·D/μ", "Número de Reynolds"], … ],   // juego Parejas: al menos 6 pares
+pasos: [ { id: "tsf5-p1", titulo: "Problema de conducción con bomba", pasos: ["Pasar los datos al SI", …] } ],
+```
+- **Parejas**: cada carta ≤ 40 caracteres (cabe en el móvil) y **ningún texto repetido en toda la asignatura** (en «Toda la
+  asignatura» se mezclan las unidades). Se puede usar `<sub>`/`<sup>`. Cada partida toma 6 pares al azar.
+- **Pasos**: al menos 3, escritos en su orden correcto, y que **solo haya un orden posible** (cada paso necesita el
+  anterior; si dos pasos se pueden intercambiar, únelos en uno). Ids `<abreviatura><nº UD>-p<n>`, estables.
+- Redactados con palabras propias a partir de la guía; el test comprueba el formato.
+
 ## Utilidades (`js/utilidades.js`, globales)
 `G` (9,8), `fmt(n, cifras=4)`, `area(D)`, `reynolds(ρ,v,D,μ)`, `regimen(Re)`, `cuatroF(Re, ε/D)`, `perdidaCarga(4f,L,D,v)`.
 Si una UD necesita cálculos repetidos (p. ej. electricidad), añádelos aquí con comentario.

@@ -175,6 +175,38 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["Re = ρ·v·D/μ", "Número de Reynolds"],
+    ["Re < 2000", "Régimen laminar"],
+    ["Re > 4000", "Régimen turbulento"],
+    ["4f = 64/Re", "Factor de fricción en laminar"],
+    ["h<sub>f</sub> = 4f·(L/D)·v²/2g", "Ecuación de Darcy"],
+    ["D<sub>H</sub> = 4A/P<sub>m</sub>", "Diámetro hidráulico"],
+    ["P = Q·ρ·g·w", "Potencia comunicada al fluido"],
+    ["L = L₀ + ΣL<sub>eq</sub>", "Longitud con accesorios"],
+    ["1 cP", "10⁻³ Pa·s"],
+    ["Diagrama de Moody", "4f según Re y ε/D"],
+    ["ε/D", "Rugosidad relativa"],
+    ["w negativo", "No hace falta bomba"]
+  ],
+  pasos: [
+    { id: "tsf5-p1", titulo: "Problema de conducción con bomba", pasos: [
+      "Pasar todos los datos al SI",
+      "Velocidad: v = Q/A",
+      "Calcular Re y ver el régimen",
+      "Factor de fricción: 64/Re o Moody (Colebrook)",
+      "Longitud total con los accesorios y h<sub>f</sub> con Darcy",
+      "Aplicar Bernoulli generalizada y despejar w",
+      "Potencia P = Q·ρ·g·w y dividir entre el rendimiento"
+    ] },
+    { id: "tsf5-p2", titulo: "¿Laminar o turbulento?", pasos: [
+      "Pasar D, μ y ρ a unidades SI",
+      "Calcular la velocidad media v = Q/A",
+      "Calcular Re = ρ·v·D/μ",
+      "Comparar con 2000 y 4000"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales: test ----------
     { id: "tsf5-1", tipo: "test", seccion: 1,

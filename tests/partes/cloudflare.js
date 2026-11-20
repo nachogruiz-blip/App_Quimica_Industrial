@@ -25,7 +25,12 @@ module.exports = async ctx => {
   await q.waitForFunction(() => document.querySelector(".barra-prog>div")?.style.width);
   const ancho = await q.$eval(".barra-prog>div", d => d.style.width);
   if (!/^[1-9]\d*%$/.test(ancho)) mal(`CSP: la barra de progreso no tiene anchura (${ancho})`);
-  for (const ruta of ["#/ud/tsf-ud5/guia?s=2", "#/test/tsf", "#/ajustes", "#/novedades"]) { await q.goto("https://app.test/" + ruta); await q.waitForTimeout(100); }
+  for (const ruta of ["#/ud/tsf-ud5/guia?s=2", "#/test/tsf", "#/ajustes", "#/novedades", "#/juegos", "#/juegos/pasos/tsf"]) { await q.goto("https://app.test/" + ruta); await q.waitForTimeout(100); }
+  // Juegos con la CSP: la barra de tiempo se mueve (style.width desde JS) y las cartas se pueden girar.
+  await q.goto("https://app.test/#/juegos/contrarreloj/tsf"); await q.click("#j-empezar"); await q.waitForTimeout(400);
+  if (!/^\d+(\.\d+)?%$/.test(await q.$eval("#j-tiempo", d => d.style.width))) mal("CSP: la barra de tiempo de los juegos no tiene anchura");
+  await q.goto("https://app.test/#/juegos/parejas/mei"); await q.click("#j-empezar"); await q.click('.carta[data-i="0"]');
+  if (!(await q.$eval('.carta[data-i="0"] .cara', c => getComputedStyle(c).display !== "none"))) mal("CSP: la carta no se gira en Parejas");
 
   // Instalar como app: manifest enlazado (solo en http) con iconos que existen y se sirven sin contraseña.
   if (!(await q.$('link[rel="manifest"]'))) mal("instalar: en Cloudflare falta el enlace al manifest");

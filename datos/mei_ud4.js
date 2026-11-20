@@ -216,6 +216,40 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["U = I·R", "Ley de Ohm"],
+    ["Voltímetro", "Se conecta en paralelo"],
+    ["Amperímetro", "Se conecta en serie"],
+    ["P = U·I", "Potencia eléctrica"],
+    ["1 kWh", "3,6·10⁶ J"],
+    ["R = ρ·L/S", "Resistencia de un cable"],
+    ["Asociación en serie", "Misma intensidad"],
+    ["Asociación en paralelo", "Misma tensión"],
+    ["Fusible", "Sobrecargas y cortocircuitos"],
+    ["Diferencial", "Fugas a tierra"],
+    ["Relé", "Interruptor con electroimán"],
+    ["1.ª ley de Kirchhoff", "En un nodo, entra = sale"],
+    ["2.ª ley de Kirchhoff", "En una malla, generadores = caídas"],
+    ["Red europea", "50 Hz"],
+    ["Pinza amperimétrica", "Mide sin abrir el circuito"]
+  ],
+  pasos: [
+    { id: "mei4-p1", titulo: "Resolver un circuito mixto", pasos: [
+      "Dibujar el sentido de la corriente y localizar nodos y mallas",
+      "Agrupar resistencias hasta una sola equivalente",
+      "Intensidad total: I = U/R<sub>eq</sub>",
+      "Volver atrás repartiendo tensiones e intensidades",
+      "Comprobar con las leyes de Kirchhoff"
+    ] },
+    { id: "mei4-p2", titulo: "Antes de trabajar en una instalación", pasos: [
+      "Cortar todas las fuentes de tensión",
+      "Bloquear el aparato de corte y señalizarlo",
+      "Comprobar que no hay tensión",
+      "Poner a tierra y en cortocircuito",
+      "Señalizar y delimitar la zona de trabajo"
+    ] }
+  ],
   preguntas: [
     // ---------- 1. Carga, tensión e intensidad ----------
     { id: "mei4-1", tipo: "test", seccion: 1,

@@ -65,6 +65,27 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["Bomba centrífuga", "Rodete y voluta"],
+    ["Desplazamiento positivo", "Caudal casi constante"],
+    ["Cebado", "Las centrífugas no aspiran aire"],
+    ["Válvula de seguridad", "Obligatoria en desplazamiento positivo"],
+    ["Cavitación", "Burbujas de vapor que colapsan"],
+    ["NPSH disponible", "Depende de la instalación"],
+    ["NPSH requerido", "Lo da el fabricante"],
+    ["Sin cavitación", "NPSH<sub>d</sub> > NPSH<sub>r</sub>"],
+    ["P<sub>v</sub>", "Presión de vapor del líquido"],
+    ["Líquido más caliente", "Más riesgo de cavitación"]
+  ],
+  pasos: [
+    { id: "tsf6-p1", titulo: "¿Cavitará la bomba? (NPSH)", pasos: [
+      "Anotar P<sub>sup</sub> (absoluta) y la presión de vapor P<sub>v</sub> a esa temperatura",
+      "Calcular (P<sub>sup</sub> − P<sub>v</sub>)/(ρ·g)",
+      "Sumar o restar el desnivel z y restar las pérdidas de la aspiración",
+      "Comparar el NPSH disponible con el requerido más un margen"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales ----------
     { id: "tsf6-1", tipo: "test", seccion: 2,

@@ -1,7 +1,8 @@
-// Motor de la app: rutas por hash, login local, las 4 secciones (Estudio, Examen, Test, Ajustes), rondas de preguntas,
-// novedades y progreso (cargar/guardar en js/usuarios.js).
+// Motor de la app: rutas por hash, login local, las 5 secciones (Estudio, Examen, Test, Juegos, Ajustes), rondas de
+// preguntas, novedades y progreso (cargar/guardar en js/usuarios.js). Los minijuegos están en js/juegos.js.
 //
-// Rutas:  #/estudio[/<módulo>]   #/ud/<ud>/guia[?s=N]   #/examen[/<módulo>]   #/test[/<módulo>]   #/ajustes   #/novedades
+// Rutas:  #/estudio[/<módulo>]   #/ud/<ud>/guia[?s=N]   #/examen[/<módulo>]   #/test[/<módulo>]   #/juegos[/<juego>[/<módulo>]]
+//         #/ajustes   #/novedades
 // Rutas directas de una unidad (enlaces de la guía y tests): #/ud/<ud>/practicar | examen | fallos
 "use strict";
 const $app = document.getElementById("app");
@@ -383,7 +384,7 @@ function marcarNav(seccion) {
   });
 }
 function router() {
-  pararReloj(); sesionActiva = null;
+  pararReloj(); pararJuego(); sesionActiva = null;
   pintarUsuario();
   const conSesion = !!usuarioActual();
   document.body.classList.toggle("sin-sesion", !conSesion);
@@ -394,9 +395,10 @@ function router() {
   window.scrollTo(0, 0);
   const ud = seccion === "ud" && udPorId(a);
   marcarNav(ud ? ({ examen: "examen", practicar: "test", fallos: "test" }[b] || "estudio")
-    : seccion === "novedades" ? "ajustes" : ["examen", "test", "ajustes"].includes(seccion) ? seccion : "estudio");
+    : seccion === "novedades" ? "ajustes" : ["examen", "test", "juegos", "ajustes"].includes(seccion) ? seccion : "estudio");
   if (seccion === "novedades") return vistaNovedades();
   if (seccion === "ajustes") return vistaAjustes();
+  if (seccion === "juegos") return vistaJuegos(a, b);
   if (seccion === "test" || seccion === "examen") return vistaConfig(seccion, a);
   if (ud) return b === "guia" || !b ? vistaGuia(ud, +new URLSearchParams(consulta).get("s")) : sesionUD(ud, b);
   return vistaEstudio(seccion === "estudio" ? a : null);

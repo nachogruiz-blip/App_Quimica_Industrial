@@ -83,6 +83,32 @@ registrarUD({
     }
   ],
 
+  // Minijuegos (js/juegos.js): Parejas (fórmula o concepto ↔ su pareja; textos cortos y distintos) y Ordena los pasos.
+  parejas: [
+    ["Q = v·A", "Caudal volumétrico"],
+    ["ṁ = ρ·Q", "Caudal másico"],
+    ["A₁·v₁ = A₂·v₂", "Ecuación de continuidad"],
+    ["Diámetro a la mitad", "Velocidad × 4"],
+    ["v = √(2·g·h)", "Teorema de Torricelli"],
+    ["h = v²/(2g)", "Altura de un chorro vertical"],
+    ["Garganta de un Venturi", "Más velocidad, menos presión"],
+    ["ΔP = (ρ<sub>m</sub> − ρ)·g·h", "Manómetro diferencial"],
+    ["1 L/s", "10⁻³ m³/s"],
+    ["P + ρgh + ½ρv² = cte", "Bernoulli en presiones"]
+  ],
+  pasos: [
+    { id: "tsf4-p1", titulo: "Caudal que sale por un orificio (Torricelli)", pasos: [
+      "Medir la profundidad h del orificio bajo la superficie",
+      "Velocidad de salida: v = √(2·g·h)",
+      "Caudal: Q = A<sub>orificio</sub>·v"
+    ] },
+    { id: "tsf4-p2", titulo: "Caudal con un tubo de Venturi", pasos: [
+      "Leer el desnivel h del manómetro diferencial",
+      "Calcular ΔP = (ρ<sub>m</sub> − ρ)·g·h",
+      "Calcular la velocidad en la garganta, v₂",
+      "Caudal: Q = A₂·v₂"
+    ] }
+  ],
   preguntas: [
     // ---------- Conceptuales ----------
     { id: "tsf4-1", tipo: "test", seccion: 1,

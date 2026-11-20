@@ -51,6 +51,14 @@ interface PreguntaNumerica extends PreguntaBase {
 }
 type Pregunta = PreguntaTest | PreguntaVF | PreguntaNumerica;
 
+/** Procedimiento del juego «Ordena los pasos»: los pasos van en su único orden correcto. */
+interface Procedimiento {
+  /** Estable: el récord se guarda por id (<abreviatura><nº UD>-p<n>, p. ej. tsf5-p1). */
+  id: string;
+  titulo: string;
+  pasos: string[];
+}
+
 /** Unidad didáctica: datos/<modulo>_udN.js. */
 interface Unidad {
   id: string;
@@ -60,6 +68,10 @@ interface Unidad {
   descripcion?: string;
   ejercicios?: string;
   guia: SeccionGuia[];
+  /** Juego «Parejas»: [fórmula o concepto, su pareja]. Textos cortos y todos distintos. */
+  parejas?: [string, string][];
+  /** Juego «Ordena los pasos». */
+  pasos?: Procedimiento[];
   preguntas: Pregunta[];
 }
 
@@ -78,6 +90,8 @@ interface Window {
   registrarUD(ud: Unidad): void;
   /** Pregunta en pantalla (la usa tests/). */
   __actual?: { q: Pregunta; v: Valores | null };
+  /** Juego en curso (lo usa tests/). */
+  __juego?: any;
 }
 declare var MODULOS: Modulo[];
 declare var UNIDADES: Unidad[];

@@ -24,6 +24,8 @@
    q("tsf3-n1").resolver({ mm: 750 }); // → 99960 (solución de clase)
    ```
 5. **Redactar `datos/<modulo>_udN.js`** con palabras propias, siguiendo `docs/formato_datos.md`, y añadir el `<script>` en `index.html`.
+   Incluye también `parejas` y `pasos` para los juegos («Juegos» en `docs/formato_datos.md`). Si la asignatura es nueva,
+   añade sus generadores de Reto rápido y Conversiones en `js/juegos.js` (`RETOS` y `CONVERSIONES`).
 6. **Comprobar**: `node tests/comprobar.js` (valida formato, muestrea numéricas, responde todas en Chromium y revisa seguridad)
    y `node tests/derechos.js` (busca frases copiadas de los PDFs). Ver «Lista antes de cada commit» en `AGENTS.md`.
    El test ya comprueba que ninguna sección de guía se salga de un móvil de 320 px. Opcional: captura en móvil para revisar el aspecto.
