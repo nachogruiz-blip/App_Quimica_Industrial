@@ -13,6 +13,8 @@ module.exports = async ctx => {
   if (!abajo) mal("navegación: en el móvil la barra no está fija abajo");
   if (await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal("móvil: la página se desborda a lo ancho");
   // Ninguna sección de ninguna guía debe salirse de la pantalla del móvil (tablas demasiado anchas, fórmulas largas…).
+  // Se mira a 320 px (móvil pequeño) para tener margen: con otras fuentes el texto ocupa algo más.
+  await m.setViewportSize({ width: 320, height: 700 });
   for (const [ud, n] of await m.evaluate(() => UNIDADES.map(u => [u.id, u.guia.length]))) {
     await m.goto(`${URL_LOCAL}#/ud/${ud}/guia`); await m.waitForSelector("#sec-1");
     await m.$$eval("details[id^=sec-]", ds => ds.forEach(d => { d.open = true; }));
@@ -20,6 +22,7 @@ module.exports = async ctx => {
       .filter(d => d.scrollWidth > d.clientWidth + 1 || d.getBoundingClientRect().right > innerWidth + 1).map(d => d.id));
     if (anchas.length || await m.evaluate(() => document.documentElement.scrollWidth > innerWidth)) mal(`móvil: la guía de ${ud} se sale de la pantalla (${anchas.join(", ") || "página"}, de ${n} secciones)`);
   }
+  await m.setViewportSize({ width: 390, height: 844 });
   await m.goto(URL_LOCAL); await m.waitForSelector(".barra-prog");
 
   // Test de un tema concreto: solo el apartado 2, todas sus preguntas.

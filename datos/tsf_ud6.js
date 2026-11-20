@@ -14,17 +14,20 @@ registrarUD({
       apuntes: "No está en los materiales de clase disponibles: teoría general de bombas",
       html: `
         <p>Las bombas aportan energía a un líquido para moverlo o subir su presión. Hay dos grandes familias:</p>
-        <table class="tabla">
-          <tr><th></th><th>Centrífugas (dinámicas)</th><th>Desplazamiento positivo</th></tr>
-          <tr><td>Principio</td><td>Un rodete da velocidad al líquido y la voluta la transforma en presión</td>
-            <td>Un volumen de líquido queda encerrado y se empuja (pistón, engranajes, lóbulos, tornillo, membrana)</td></tr>
-          <tr><td>Caudal</td><td>Baja si aumenta la presión que tiene que vencer</td>
-            <td>Casi constante aunque cambie la presión de impulsión</td></tr>
-          <tr><td>Uso típico</td><td>Caudales grandes, líquidos poco viscosos</td>
-            <td>Dosificación, líquidos viscosos, presiones altas</td></tr>
-          <tr><td>Cuidado</td><td>Cebado (no aspiran aire) y cavitación</td>
-            <td>Nunca cerrar la impulsión: necesitan válvula de seguridad</td></tr>
-        </table>
+        <h4>Centrífugas (dinámicas)</h4>
+        <ul>
+          <li><b>Principio</b>: un rodete da velocidad al líquido y la voluta la transforma en presión.</li>
+          <li><b>Caudal</b>: baja si aumenta la presión que tiene que vencer.</li>
+          <li><b>Uso típico</b>: caudales grandes, líquidos poco viscosos.</li>
+          <li><b>Cuidado</b>: cebado (no aspiran aire) y cavitación.</li>
+        </ul>
+        <h4>De desplazamiento positivo</h4>
+        <ul>
+          <li><b>Principio</b>: un volumen de líquido queda encerrado y se empuja (pistón, engranajes, lóbulos, tornillo, membrana).</li>
+          <li><b>Caudal</b>: casi constante aunque cambie la presión de impulsión.</li>
+          <li><b>Uso típico</b>: dosificación, líquidos viscosos, presiones altas.</li>
+          <li><b>Cuidado</b>: nunca cerrar la impulsión; necesitan válvula de seguridad.</li>
+        </ul>
         <p>La potencia que hay que dar al líquido es la de la UD5: P = Q·ρ·g·w, y la del motor P/η.</p>`
     },
     {
