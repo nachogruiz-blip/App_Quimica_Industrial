@@ -3,6 +3,9 @@
 //
 // La app consulta /__usuario para saber quién ha entrado y no pide un segundo login.
 //
+// Cerrar sesión: HTTP Basic no tiene «salir», así que la app pide /__salir con el usuario reservado SALIR. El navegador
+// guarda esas credenciales falsas en lugar de las buenas y, al recargar, el worker vuelve a pedir usuario y contraseña.
+//
 // Usuarios autorizados: secreto USUARIOS del Worker (Settings → Variables and Secrets → tipo Secret), una persona por
 // línea o separadas por comas. Cada línea es «usuario:hash» generado con herramientas/generar_usuario.html
 // (ana:pbkdf2-sha256$10000$<sal>$<hash>): así la contraseña no se guarda en ningún sitio. Por compatibilidad se acepta
@@ -13,6 +16,8 @@
 // credenciales ya comprobadas se recuerdan en memoria y no cuentan, así que usar la app con normalidad no gasta intentos.
 
 const REINO = "Quimica Industrial";
+/** Usuario reservado para cerrar sesión (nunca es una cuenta real: no se compara con USUARIOS ni gasta intentos). */
+export const SALIR = "__salir";
 // Cabeceras de seguridad de TODAS las respuestas (única fuente: no hay archivo _headers). Sin 'unsafe-inline': la app no
 // usa style="" ni scripts en línea (lo comprueba tests/).
 export const SEGURIDAD = {
@@ -113,6 +118,12 @@ export default {
       return conCabeceras(await env.ASSETS.fetch(peticion), { "Cache-Control": "public, max-age=86400" });
 
     const cabecera = peticion.headers.get("Authorization"), cred = leerCredenciales(cabecera);
+    // Cerrar sesión: /__salir acepta solo el usuario reservado (el navegador lo guarda en lugar del bueno); con él, el
+    // resto de rutas vuelve a pedir la contraseña.
+    if (new URL(peticion.url).pathname === "/__salir")
+      return cred?.[0] === SALIR ? conCabeceras(new Response("Sesión cerrada.", { headers: { "Content-Type": "text/plain; charset=utf-8" } }))
+        : pedirClave("Introduce tu usuario y contraseña.");
+    if (cred?.[0] === SALIR) return pedirClave("Sesión cerrada. Introduce tu usuario y contraseña.");
     if (!cred) return pedirClave("Introduce tu usuario y contraseña.");
     const cuenta = usuarios.get(cred[0]);
     const huella = await sha256(String(env.USUARIOS) + "\n" + cabecera);

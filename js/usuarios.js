@@ -81,6 +81,17 @@ function abrirSesion(id, recordar) {
 }
 function cerrarSesion() { try { sessionStorage.removeItem(SESION); localStorage.removeItem(SESION); } catch {} }
 
+/**
+ * Cierra la sesión de Cloudflare (HTTP Basic): pide /__salir con el usuario reservado de worker.mjs para que el navegador
+ * olvide las credenciales buenas y recarga, así el worker vuelve a pedir usuario y contraseña.
+ */
+function cerrarSesionRemota() {
+  const x = new XMLHttpRequest();
+  x.open("GET", "/__salir", true, "__salir", "salir");
+  x.onloadend = () => location.replace("/");
+  x.send();
+}
+
 /** Crea un usuario. Devuelve un mensaje de error o null. El primer usuario hereda el progreso anterior a los perfiles. */
 async function registrar(nombre, clave) {
   if (!nombreValido(nombre)) return "El usuario debe tener 2–30 letras, números, «.», «-» o «_».";

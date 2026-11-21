@@ -3,6 +3,15 @@
 // mismo día, añade -2), un título corto y 2–4 puntos en lenguaje sencillo. Nunca cambies el id de una entrada ya publicada.
 window.NOVEDADES = [
   {
+    id: "2026-11-21",
+    titulo: "Cerrar sesión y cambiar de usuario",
+    puntos: [
+      "Ya puedes cerrar la sesión sin cerrar el navegador: botón «Salir» arriba o «Cerrar sesión» en Ajustes.",
+      "Después se vuelven a pedir el usuario y la contraseña, así que puedes entrar con otra cuenta.",
+      "Cada usuario sigue teniendo su propio progreso."
+    ]
+  },
+  {
     id: "2026-11-20-6",
     titulo: "Nueva sección: 🎮 Juegos",
     puntos: [

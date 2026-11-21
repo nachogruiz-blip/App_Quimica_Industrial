@@ -2,7 +2,7 @@
 
 > **Agente que retoma el trabajo: empieza aquí.** Actualiza este archivo al terminar cada sesión.
 
-Última actualización: 2026-11-20
+Última actualización: 2026-11-21
 
 ## Objetivo
 App de estudio de FP Grado Superior de Química Industrial. El contexto privado (centro, usuarios) está en el repo
@@ -32,6 +32,8 @@ A partir de los PDFs de cada unidad didáctica (UD) se elabora: guía de estudio
 - [x] Comprobación automática `node tests/comprobar.js`.
 - [x] Una sola pantalla de acceso en Cloudflare: `worker.mjs` expone `/__usuario` y la app usa ese usuario (sin login local);
   el login local solo aparece al abrir `index.html` en local. Recuadro de novedades al entrar (`datos/novedades.js`).
+  **Cerrar sesión también en Cloudflare** (2026-11-21): «Salir»/«Cerrar sesión» piden `/__salir` con el usuario reservado
+  `__salir` para que el navegador olvide la contraseña y la vuelva a pedir (cambiar de usuario sin cerrar el navegador).
   Desplegable «💡 Explicación» con «Dónde estudiarlo» (guía en nueva pestaña, apuntes con apartado y página, ejercicios).
 - [x] Login local con usuario/contraseña (`js/usuarios.js`): perfiles por navegador, modo invitado, progreso por usuario,
   exportar/importar progreso a `.json`. El test prueba el login.
