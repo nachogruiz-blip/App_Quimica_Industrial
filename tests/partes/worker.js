@@ -43,6 +43,19 @@ module.exports = async ctx => {
   }
   const yo = await pedir(hashAna, { cred: "ana:clave-larga-1", ruta: "/__usuario" });
   if ((await yo.json()).usuario !== "ana") mal("/__usuario no devuelve el usuario que ha entrado");
+  // Cerrar sesión: /__salir solo da 200 con el usuario reservado; con él, el resto pide la contraseña y no gasta intentos.
+  {
+    const lim = limitador(1), salir = w.SALIR + ":salir";
+    for (const [cred, ruta, esperado] of [[salir, "/__salir", 200], [null, "/__salir", 401], ["ana:clave-larga-1", "/__salir", 401],
+      [salir, "/", 401], [salir, "/__usuario", 401], [salir, "/datos/tsf_ud5.js", 401]]) {
+      const r = await pedir(hashAna, { cred, ruta, ip: "5.5.5.5", limite: lim });
+      if (r.status !== esperado) mal(`cerrar sesión: ${cred} en ${ruta} da ${r.status}, se esperaba ${esperado}`);
+      if (esperado === 401 && !r.headers.get("WWW-Authenticate")) mal(`cerrar sesión: el 401 de ${ruta} no vuelve a pedir la contraseña`);
+      revisarCabeceras(r, `cerrar sesión ${ruta}`);
+    }
+    if (lim.cuenta.get("5.5.5.5")) mal("cerrar sesión gasta intentos de contraseña");
+    if ((await pedir(hashAna + "\n" + w.SALIR + ":salir", { cred: salir })).status !== 401) mal("el usuario reservado para salir puede entrar");
+  }
   if (/unsafe-inline|unsafe-eval/.test(w.SEGURIDAD["Content-Security-Policy"])) mal("la CSP no debe permitir 'unsafe-inline' ni 'unsafe-eval'");
 
   // Límite de intentos: tras 3 comprobaciones fallidas desde una IP, 429 (también con la contraseña buena); otra IP sigue.

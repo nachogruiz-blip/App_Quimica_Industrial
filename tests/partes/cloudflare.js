@@ -7,8 +7,11 @@ module.exports = async ctx => {
   const { SEGURIDAD, PUBLICOS } = await cargarWorker();
   const mal = e => ctx.problemas.push(e);
   const q = await ctx.nuevaPagina({}, "modo Cloudflare");
-  await q.route("https://app.test/**", ruta => {
+  let salidas = 0;
+  // Función y no patrón: la petición de cerrar sesión lleva credenciales en la URL (https://__salir:…@app.test/__salir).
+  await q.route(url => url.hostname === "app.test", ruta => {
     const camino = new URL(ruta.request().url()).pathname;
+    if (camino === "/__salir") { salidas++; return ruta.fulfill({ body: "Sesión cerrada.", headers: SEGURIDAD }); }
     if (camino === "/__usuario") return ruta.fulfill({ json: { usuario: "Nacho" }, headers: SEGURIDAD });
     const f = path.join(RAIZ, camino === "/" ? "index.html" : camino);
     return fs.existsSync(f) ? ruta.fulfill({ path: f, headers: SEGURIDAD }) : ruta.fulfill({ status: 404, headers: SEGURIDAD });
@@ -16,7 +19,7 @@ module.exports = async ctx => {
   await q.goto("https://app.test/"); await q.waitForSelector(".barra-prog, #f-login");
   if (await q.$("#f-login")) mal("modo Cloudflare: pide un segundo login");
   const barra = await q.textContent("#usuario-barra");
-  if (!barra.includes("Nacho") || (await q.$("#salir"))) mal("modo Cloudflare: la barra debe mostrar el usuario y no «Salir»");
+  if (!barra.includes("Nacho") || !(await q.$("#salir"))) mal("modo Cloudflare: la barra debe mostrar el usuario y «Salir»");
   if (!(await q.$("#novedades"))) mal("modo Cloudflare: no salen las novedades al entrar");
   await q.click("#novedades-ok");
 
@@ -31,6 +34,11 @@ module.exports = async ctx => {
   if (!/^\d+(\.\d+)?%$/.test(await q.$eval("#j-tiempo", d => d.style.width))) mal("CSP: la barra de tiempo de los juegos no tiene anchura");
   await q.goto("https://app.test/#/juegos/parejas/mei"); await q.click("#j-empezar"); await q.click('.carta[data-i="0"]');
   if (!(await q.$eval('.carta[data-i="0"] .cara', c => getComputedStyle(c).display !== "none"))) mal("CSP: la carta no se gira en Parejas");
+
+  // Cerrar sesión en Ajustes: pide /__salir (el navegador olvida la contraseña) y recarga para que el worker la pida.
+  await q.goto("https://app.test/#/ajustes"); await q.waitForSelector("#aj-salir");
+  await Promise.all([q.waitForURL("https://app.test/", { timeout: 5000 }).catch(() => {}), q.click("#aj-salir")]);
+  if (salidas !== 1 || q.url() !== "https://app.test/") mal(`modo Cloudflare: «Cerrar sesión» no pasa por /__salir ni recarga (${salidas}, ${q.url()})`);
 
   // Instalar como app: manifest enlazado (solo en http) con iconos que existen y se sirven sin contraseña.
   if (!(await q.$('link[rel="manifest"]'))) mal("instalar: en Cloudflare falta el enlace al manifest");

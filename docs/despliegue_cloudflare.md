@@ -66,7 +66,10 @@ fallara por este binding, quita el bloque `ratelimits` de `wrangler.jsonc`: el w
 sin las credenciales del usuario para crear el icono de la app instalada. No contienen nada del contenido de estudio.
 
 Es la **única** pantalla de acceso: la app pregunta al worker (`/__usuario`) quién ha entrado y guarda el progreso con
-ese usuario, sin pedir otro login. Para «cerrar sesión» hay que cerrar el navegador (es como funciona HTTP Basic).
+ese usuario, sin pedir otro login. **Cerrar sesión** (botón «Salir» de la barra y «Cerrar sesión» en Ajustes): HTTP Basic
+no tiene «salir», así que la app pide `/__salir` con el usuario reservado `__salir` (`SALIR` en `worker.mjs`); el navegador
+guarda esas credenciales falsas en lugar de las buenas y, al recargar, el worker vuelve a pedir usuario y contraseña (no
+gasta intentos). Probado en Chromium; si algún navegador no las olvida, cerrarlo del todo sigue funcionando.
 
 ### Alternativa con tarjeta: Cloudflare Access
 Si algún día se pone la tarjeta (el plan Free de Zero Trust no cobra hasta 50 usuarios): *Zero Trust → Access controls →

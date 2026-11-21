@@ -293,7 +293,8 @@ function vistaAjustes() {
     .map(m => `<p><b>${nombreModulo(m)}</b></p>${barraProgreso(udsDeModulo(m.id).flatMap(x => x.preguntas))}`).join("");
   $app.innerHTML = `<h1>${ico("⚙️")} Ajustes</h1>
     <section class="card"><h2>👤 Usuario</h2><p>Has entrado como <b id="aj-nombre"></b>.</p>
-      ${u.remoto ? `<p class="sub">Para cerrar la sesión, cierra el navegador.</p>` : `<button id="aj-salir">Cerrar sesión</button>`}</section>
+      <button id="aj-salir">Cerrar sesión</button>
+      <p class="sub">Para entrar con otro usuario: cierra la sesión y escribe su usuario y contraseña.${u.remoto ? " Si no te los vuelve a pedir, cierra del todo el navegador." : ""}</p></section>
     <section class="card"><h2>🌓 Apariencia</h2>
       <div class="segmentado" role="radiogroup" aria-label="Tema">${[["auto", "🔄 Automático"], ["light", "☀️ Día"], ["dark", "🌙 Noche"]].map(([val, t]) =>
         `<label><input type="radio" name="tema" value="${val}" ${tema === val ? "checked" : ""}><span>${t}</span></label>`).join("")}</div>
@@ -308,8 +309,7 @@ function vistaAjustes() {
     <section class="card"><h2>🆕 Novedades</h2><a href="#/novedades">Ver todas las novedades de la app</a>
       <p class="sub">Versión de la app: <span id="version">${(window.NOVEDADES || [])[0]?.id || "—"}</span></p></section>`;
   document.getElementById("aj-nombre").textContent = u.nombre;
-  const salir = document.getElementById("aj-salir");
-  if (salir) salir.onclick = () => { cerrarSesion(); location.hash = "#/"; router(); };
+  document.getElementById("aj-salir").onclick = salirDeLaCuenta;
   const inst = document.getElementById("instalar");
   if (inst) inst.onclick = async () => { const a = avisoInstalar; avisoInstalar = null; a.prompt(); await a.userChoice.catch(() => {}); vistaAjustes(); };
   $app.querySelectorAll("input[name=tema]").forEach(r => r.onchange = () => aplicarTema(r.value));
@@ -372,9 +372,18 @@ function pintarUsuario() {
   if (!u) return;
   const nombre = document.createElement("span"); nombre.className = "sub nombre"; nombre.textContent = "👤 " + u.nombre;
   const salir = document.createElement("button"); salir.className = "btn-icono"; salir.id = "salir"; salir.textContent = "Salir";
-  salir.onclick = () => { cerrarSesion(); if (location.hash && location.hash !== "#/") location.hash = "#/"; else router(); };
-  if (u.remoto) { nombre.title = "Para salir, cierra el navegador"; return zona.append(nombre); }
+  salir.onclick = salirDeLaCuenta;
   zona.append(nombre, " ", salir);
+}
+
+/** «Salir» / «Cerrar sesión»: avisa si hay una ronda empezada; en Cloudflare vuelve a pedir usuario y contraseña. */
+async function salirDeLaCuenta() {
+  if (sesionActiva && sesionActiva.respuestas.length &&
+    !(await confirmar("¿Dejar esta ronda? Las respuestas que ya has dado sí cuentan en tu progreso.", { si: "Dejar la ronda", no: "Seguir" }))) return;
+  sesionActiva = null;
+  if (usuarioActual()?.remoto) return cerrarSesionRemota();
+  cerrarSesion();
+  if (location.hash && location.hash !== "#/") location.hash = "#/"; else router();
 }
 
 // ---------- Router ----------
